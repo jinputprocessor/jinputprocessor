@@ -1,8 +1,8 @@
 package io.github.jinputprocessor.core.processor;
 
+import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.ProcessFailure;
 import io.github.jinputprocessor.ProcessResult;
-import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.core.result.BaseProcessorResult;
 import jakarta.annotation.Nonnull;
 import java.util.Objects;

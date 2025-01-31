@@ -2,7 +2,6 @@ package io.github.jinputprocessor.core.builder;
 
 import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.ProcessFailure.ValidationError;
-import io.github.jinputprocessor.core.result.BaseProcessorResult;
 import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 
@@ -60,14 +59,5 @@ public interface InputProcessorBuilder<IN, OUT, SELF extends InputProcessorBuild
 	);
 
 	// ===========================================================================================================
-
-	/**
-	 * 
-	 * @param <T>
-	 * @return
-	 */
-	public static <T> InputProcessor<T, T> noOpProcessor() {
-		return value -> BaseProcessorResult.success(value);
-	}
 
 }

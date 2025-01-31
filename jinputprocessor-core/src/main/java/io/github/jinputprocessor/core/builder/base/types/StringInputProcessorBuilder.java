@@ -1,7 +1,7 @@
 package io.github.jinputprocessor.core.builder.base.types;
 
 import io.github.jinputprocessor.InputProcessor;
-import io.github.jinputprocessor.core.builder.InputProcessorBuilder;
+import io.github.jinputprocessor.InputProcessors;
 import io.github.jinputprocessor.core.builder.base.AbstractInputProcessorBuilder;
 import io.github.jinputprocessor.core.builder.base.types.number.IntegerInputProcessorBuilder;
 import io.github.jinputprocessor.core.builder.base.types.number.LongInputProcessorBuilder;
@@ -13,7 +13,7 @@ public class StringInputProcessorBuilder<IN> extends AbstractInputProcessorBuild
 	}
 
 	public static StringInputProcessorBuilder<String> newInstance() {
-		return new StringInputProcessorBuilder<>(InputProcessorBuilder.noOpProcessor());
+		return new StringInputProcessorBuilder<>(InputProcessors.noOpProcessor());
 	}
 
 	@Override

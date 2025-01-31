@@ -1,7 +1,7 @@
 package io.github.jinputprocessor.core.builder.base.types.collection;
 
 import io.github.jinputprocessor.InputProcessor;
-import io.github.jinputprocessor.core.builder.InputProcessorBuilder;
+import io.github.jinputprocessor.InputProcessors;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -13,7 +13,7 @@ public class ListInputProcessorBuilder<IN, T> extends AbstractSequencedCollectio
 	}
 
 	public static <T> ListInputProcessorBuilder<List<T>, T> newInstance() {
-		return new ListInputProcessorBuilder<>(InputProcessorBuilder.noOpProcessor());
+		return new ListInputProcessorBuilder<>(InputProcessors.noOpProcessor());
 	}
 
 	public <OUT> ListInputProcessorBuilder<IN, OUT> processEach(InputProcessor<T, OUT> elementProcessor) {
