@@ -23,15 +23,15 @@ public class ProcessResultAssert<T> extends AbstractAssert<ProcessResultAssert<T
 
 	public ProcessResultAssert<T> isSuccessWithValue(T expectedValue) {
 		isSuccess();
-		Assertions.assertThat(actual.getValue())
-			.overridingErrorMessage("Expected process result to have value <%s>, but has <%s>", expectedValue, actual.getValue())
+		Assertions.assertThat(actual.get())
+			.overridingErrorMessage("Expected process result to have value <%s>, but has <%s>", expectedValue, actual.get())
 			.isEqualTo(expectedValue);
 		return this;
 	}
 
 	public ProcessResultAssert<T> isFailure() {
 		Assertions.assertThat(actual.isFailure())
-			.overridingErrorMessage("Expected process result to be failure, but is success with value <%s>", actual.getValue())
+			.overridingErrorMessage("Expected process result to be failure, but is success with value <%s>", actual.get())
 			.isFalse();
 		return this;
 	}

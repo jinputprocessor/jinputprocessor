@@ -18,7 +18,7 @@ public class SanitizationProcessorTest {
 		var actualResult = processor.process(null);
 
 		ProcessResultAssert.assertThat(actualResult).isSuccessWithValue("null");
-		Assertions.assertThat(actualResult).extracting(ProcessResult::getValue).isEqualTo("null");
+		Assertions.assertThat(actualResult).extracting(ProcessResult::get).isEqualTo("null");
 	}
 
 }

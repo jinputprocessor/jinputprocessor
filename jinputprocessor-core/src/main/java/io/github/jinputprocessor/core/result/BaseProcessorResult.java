@@ -13,12 +13,13 @@ public class BaseProcessorResult<T> implements ProcessResult<T> {
 
 	private static ProcessFailureMapper defaultFailureMapper = new ToIllegalArgumentProcessorFailureMapper();
 
+	@Nonnull
 	public static ProcessFailureMapper getDefaultFailureMapper() {
 		return defaultFailureMapper;
 	}
 
-	public static void setDefaultFailureMapper(ProcessFailureMapper defaultFailureMapper) {
-		BaseProcessorResult.defaultFailureMapper = defaultFailureMapper;
+	public static void setDefaultFailureMapper(@Nonnull ProcessFailureMapper defaultFailureMapper) {
+		BaseProcessorResult.defaultFailureMapper = Objects.requireNonNull(defaultFailureMapper, "defaultFailureMapper cannot be null");
 	}
 
 	// ------------------------------------------------------------------------------------------------------------
@@ -43,11 +44,6 @@ public class BaseProcessorResult<T> implements ProcessResult<T> {
 	}
 
 	@Override
-	public ProcessResult<T> withFailureMapper(@Nonnull ProcessFailureMapper failureMapper) {
-		return new BaseProcessorResult<T>(value, failure, failureMapper);
-	}
-
-	@Override
 	public boolean isSuccess() {
 		return failure == null;
 	}
@@ -58,7 +54,7 @@ public class BaseProcessorResult<T> implements ProcessResult<T> {
 	}
 
 	@Override
-	public @Nonnull T getValue() {
+	public @Nonnull T get() {
 		if (isFailure()) {
 			throw new IllegalStateException("Cannot get the value as result is failure, please first test with isSuccess()/isFailure()");
 		}
@@ -66,7 +62,7 @@ public class BaseProcessorResult<T> implements ProcessResult<T> {
 	}
 
 	@Override
-	public T getValueOrThrow(String inputName) {
+	public T getOrThrow(String inputName) {
 		if (isFailure()) {
 			throw failureMapper.mapFailure(inputName, failure);
 		}

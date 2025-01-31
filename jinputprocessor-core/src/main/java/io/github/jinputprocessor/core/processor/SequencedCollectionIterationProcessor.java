@@ -60,7 +60,7 @@ public class SequencedCollectionIterationProcessor<C_IN extends SequencedCollect
 		if (elemResult.isFailure()) {
 			return new Result<>(elemIndex, null, elemResult.getFailure());
 		} else {
-			return new Result<>(elemIndex, elemResult.getValue(), null);
+			return new Result<>(elemIndex, elemResult.get(), null);
 		}
 	}
 

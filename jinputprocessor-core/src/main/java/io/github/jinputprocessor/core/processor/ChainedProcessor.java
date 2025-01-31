@@ -22,7 +22,7 @@ public class ChainedProcessor<IN, OUT, NEW_OUT> implements InputProcessor<IN, NE
 		if (resultOut.isFailure()) {
 			return BaseProcessorResult.failure(resultOut.getFailure());
 		}
-		var outValue = resultOut.getValue();
+		var outValue = resultOut.get();
 		var resultNewOut = secondProcessor.process(outValue);
 		return resultNewOut;
 	}

@@ -25,7 +25,7 @@ public class ListTest {
 			var result = listProcessor.process(List.of(" ", " abc ", " 123 "));
 
 			Assertions.assertThat(result.isSuccess()).isTrue();
-			var actual = result.getValue();
+			var actual = result.get();
 			var expected = List.of("", "abc", "123");
 			Assertions.assertThat(actual).containsExactlyElementsOf(expected);
 			Assertions.assertThat(actual).isUnmodifiable();
@@ -43,7 +43,7 @@ public class ListTest {
 			var result = listProcessor.process(List.of(" ", " abc ", " 123 "));
 
 			Assertions.assertThat(result.isSuccess()).isTrue();
-			var actualList = result.getValue();
+			var actualList = result.get();
 			var expectedList = List.of(" ", " abc ", " 123 ");
 			Assertions.assertThat(actualList).containsExactlyElementsOf(expectedList);
 			Assertions.assertThat(actualList).isUnmodifiable();
@@ -72,7 +72,7 @@ public class ListTest {
 			Assertions.assertThat(actualFailure).isEqualTo(expectedFailure);
 
 			Assertions.assertThatIllegalArgumentException()
-				.isThrownBy(() -> result.getValueOrThrow("myList"))
+				.isThrownBy(() -> result.getOrThrow("myList"))
 				.withMessage("Multiple failures while processing 'myList'")
 				.satisfies(e -> {
 					Assertions.assertThat(e.getSuppressed()).hasSize(3);
@@ -95,7 +95,7 @@ public class ListTest {
 			var result = listProcessor.process(List.of("1", "2", "3"));
 
 			Assertions.assertThat(result.isSuccess()).isTrue();
-			var actual = result.getValue();
+			var actual = result.get();
 			var expected = List.of(1, 2, 3);
 			Assertions.assertThat(actual).containsExactlyElementsOf(expected);
 			Assertions.assertThat(actual).isUnmodifiable();

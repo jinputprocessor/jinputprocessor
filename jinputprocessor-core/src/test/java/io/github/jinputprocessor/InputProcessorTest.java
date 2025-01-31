@@ -47,7 +47,7 @@ public class InputProcessorTest {
 						.build();
 
 					Assertions.assertThatNullPointerException()
-						.isThrownBy(() -> processor.process(null).getValueOrThrow("myVal"))
+						.isThrownBy(() -> processor.process(null).getOrThrow("myVal"))
 						.withMessage("NPE for myVal");
 				} finally {
 					InputProcessor.setDefaultFailureMapper(defaultFailureMapper);
