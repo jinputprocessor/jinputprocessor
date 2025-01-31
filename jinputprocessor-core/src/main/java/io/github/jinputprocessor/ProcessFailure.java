@@ -77,6 +77,10 @@ public sealed interface ProcessFailure {
 		record StringNotParseableToInteger() implements ValidationError {
 		}
 
+		record StringTooLong(int currentLength, int maxLength) implements ValidationError {
+
+		}
+
 		/*
 		 * ===========================================================================
 		 * NUMBER

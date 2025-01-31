@@ -37,4 +37,13 @@ public class StringValidationBuilder<IN> extends AbstractValidationBuilder<IN, S
 		return cast();
 	}
 
+	public StringValidationBuilder<IN> isMaxLength(int maxLength) {
+		builder = builder.validate(
+			value -> value.length() > maxLength
+				? new ValidationError.StringTooLong(value.length(), maxLength)
+				: null
+		);
+		return cast();
+	}
+
 }

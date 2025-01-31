@@ -18,4 +18,14 @@ public class StringSanitizationBuilder<IN> extends AbstractSanitizationBuilder<I
 		return this;
 	}
 
+	public StringSanitizationBuilder<IN> toUpperCase() {
+		builder = builder.sanitize(String::toUpperCase);
+		return this;
+	}
+
+	public StringSanitizationBuilder<IN> toLowerCase() {
+		builder = builder.sanitize(String::toLowerCase);
+		return this;
+	}
+
 }
