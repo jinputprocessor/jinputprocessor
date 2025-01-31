@@ -1,4 +1,4 @@
-package io.github.jinputprocessor.assertions;
+package io.github.jinputprocessor;
 
 import io.github.jinputprocessor.ProcessResult;
 import org.assertj.core.api.AbstractAssert;

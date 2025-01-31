@@ -1,10 +1,6 @@
 package io.github.jinputprocessor;
 
-import io.github.jinputprocessor.ProcessResult;
-import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.ProcessFailure.ValidationError;
-import io.github.jinputprocessor.core.processor.ChainedProcessor;
-import java.util.function.Consumer;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -66,23 +62,17 @@ public class InputProcessorTest {
 	@Nested
 	class AndThen {
 
-		@SuppressWarnings("unchecked")
 		@Test
 		void andThen_instance() {
 			InputProcessor<String, String> subProcessor1 = value -> ProcessResult.success(value + "-1");
 			InputProcessor<String, String> subProcessor2 = value -> ProcessResult.success(value + "-2");
 
-			var finalProcessor = subProcessor1.andThen(subProcessor2);
-			var actualResult = finalProcessor.process("test");
+			var processor = subProcessor1.andThen(subProcessor2);
 
-			var expectedResult = ProcessResult.success("test-1-2");
-			Consumer<ChainedProcessor<String, String, String>> requirements = chainedProcessor -> {
-				Assertions.assertThat(chainedProcessor)
-					.extracting(ChainedProcessor::getFirstProcessor, ChainedProcessor::getSecondProcessor)
-					.containsExactly(subProcessor1, subProcessor2);
-			};
-			Assertions.assertThat(finalProcessor).isInstanceOfSatisfying((Class<ChainedProcessor<String, String, String>>) (Class<?>) ChainedProcessor.class, requirements);
-			Assertions.assertThat(actualResult).isEqualTo(expectedResult);
+			InputProcessorAssert.assertThat(processor)
+				.isChainedProcessor()
+				.hastFirstProcessor(subProcessor1)
+				.hastSecondProcessor(subProcessor2);
 		}
 
 	}

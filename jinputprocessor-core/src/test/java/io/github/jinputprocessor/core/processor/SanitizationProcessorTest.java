@@ -1,7 +1,7 @@
 package io.github.jinputprocessor.core.processor;
 
 import io.github.jinputprocessor.ProcessResult;
-import io.github.jinputprocessor.assertions.ProcessResultAssert;
+import io.github.jinputprocessor.ProcessResultAssert;
 import io.github.jinputprocessor.core.processor.SanitizationProcessor;
 import java.util.function.Function;
 import org.assertj.core.api.Assertions;
