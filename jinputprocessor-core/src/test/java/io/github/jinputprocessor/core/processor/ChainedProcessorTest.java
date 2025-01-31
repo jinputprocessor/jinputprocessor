@@ -1,9 +1,8 @@
 package io.github.jinputprocessor.core.processor;
 
-import io.github.jinputprocessor.ProcessResult;
 import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.ProcessFailure.ValidationError;
-import io.github.jinputprocessor.core.processor.ChainedProcessor;
+import io.github.jinputprocessor.ProcessResult;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,7 @@ public class ChainedProcessorTest {
 	@Test
 	void when_error_in_first_then_second_is_not_processed() {
 
-		ProcessResult<String> expectedResult = ProcessResult.failure(new ValidationError.CustomError("error.key"));
+		ProcessResult<String> expectedResult = ProcessResult.failure(new ValidationError.ObjectIsNull());
 		InputProcessor<String, String> subProcessor1 = value -> {
 			return expectedResult;
 		};

@@ -22,7 +22,7 @@ public class InputProcessorTest {
 
 		@Test
 		void nominal_error() {
-			var validationError = new ValidationError.CustomError("error.key");
+			var validationError = new ValidationError.ObjectIsNull();
 			ProcessResult<String> expectedResult = ProcessResult.failure(validationError);
 			InputProcessor<String, String> processStr = value -> expectedResult;
 

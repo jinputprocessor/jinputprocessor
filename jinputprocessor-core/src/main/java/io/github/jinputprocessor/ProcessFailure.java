@@ -1,7 +1,6 @@
 package io.github.jinputprocessor;
 
 import java.util.Collection;
-import java.util.Map;
 
 public sealed interface ProcessFailure {
 
@@ -43,16 +42,7 @@ public sealed interface ProcessFailure {
 		 * ===========================================================================
 		 */
 
-		record CustomError(Object errorKey, Map<String, Object> args) implements ValidationError {
-
-			public CustomError(Object errorKey) {
-				this(errorKey, Map.of());
-			}
-
-			public CustomError(Object errorKey, Map<String, Object> args) {
-				this.errorKey = errorKey;
-				this.args = Map.copyOf(args);
-			}
+		non-sealed interface CustomValidationError extends ValidationError {
 
 		}
 

@@ -45,7 +45,7 @@ public class ToIllegalArgumentProcessorFailureMapper implements ProcessFailureMa
 			case ValidationError.NumberMustBeGreaterThan err -> "must be greater than " + err.ref();
 			case ValidationError.NumberMustBeGreaterOrEqualTo err -> "must be greater or equal to " + err.ref();
 
-			case ValidationError.CustomError err -> err.errorKey() + ": " + err.args();
+			case ValidationError.CustomValidationError err -> err.toString();
 		};
 	}
 
