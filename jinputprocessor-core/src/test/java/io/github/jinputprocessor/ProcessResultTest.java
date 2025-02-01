@@ -1,6 +1,6 @@
 package io.github.jinputprocessor;
 
-import io.github.jinputprocessor.core.result.BaseProcessorResult;
+import io.github.jinputprocessor.result.BaseProcessorResult;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

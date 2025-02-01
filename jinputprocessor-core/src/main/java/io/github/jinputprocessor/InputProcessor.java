@@ -1,8 +1,8 @@
 package io.github.jinputprocessor;
 
-import io.github.jinputprocessor.core.builder.Builder;
-import io.github.jinputprocessor.core.processor.ChainedProcessor;
-import io.github.jinputprocessor.core.result.BaseProcessorResult;
+import io.github.jinputprocessor.builder.Builder;
+import io.github.jinputprocessor.processor.ChainedProcessor;
+import io.github.jinputprocessor.result.BaseProcessorResult;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 

@@ -1,9 +1,9 @@
 package io.github.jinputprocessor;
 
 import io.github.jinputprocessor.ProcessFailure.ValidationError;
-import io.github.jinputprocessor.core.processor.MappingProcessor;
-import io.github.jinputprocessor.core.processor.SanitizationProcessor;
-import io.github.jinputprocessor.core.processor.ValidationProcessor;
+import io.github.jinputprocessor.processor.MappingProcessor;
+import io.github.jinputprocessor.processor.SanitizationProcessor;
+import io.github.jinputprocessor.processor.ValidationProcessor;
 import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 
