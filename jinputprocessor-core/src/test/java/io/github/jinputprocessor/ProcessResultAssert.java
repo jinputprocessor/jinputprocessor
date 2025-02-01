@@ -1,6 +1,5 @@
 package io.github.jinputprocessor;
 
-import io.github.jinputprocessor.ProcessResult;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
 
@@ -24,16 +23,20 @@ public class ProcessResultAssert<T> extends AbstractAssert<ProcessResultAssert<T
 	public ProcessResultAssert<T> isSuccessWithValue(T expectedValue) {
 		isSuccess();
 		Assertions.assertThat(actual.get())
-			.overridingErrorMessage("Expected process result to have value <%s>, but has <%s>", expectedValue, actual.get())
+			.overridingErrorMessage("Expected process result to have value:\n%s\nbut has:\n%s", expectedValue, actual.get())
 			.isEqualTo(expectedValue);
 		return this;
 	}
 
 	public ProcessResultAssert<T> isFailure() {
 		Assertions.assertThat(actual.isFailure())
-			.overridingErrorMessage("Expected process result to be failure, but is success with value <%s>", actual.get())
-			.isFalse();
+			.overridingErrorMessage(() -> "Expected process result to be failure, but is success with value: " + actual.get())
+			.isTrue();
 		return this;
+	}
+
+	public ProcessFailureAssert assertThatFailure() {
+		return ProcessFailureAssert.assertThat(actual.getFailure());
 	}
 
 }

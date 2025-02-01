@@ -93,7 +93,7 @@ public class BaseProcessorResult<T> implements ProcessResult<T> {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(value, failure);
+		return Objects.hash(value, failure, failureMapper);
 	}
 
 	@Override
@@ -105,7 +105,17 @@ public class BaseProcessorResult<T> implements ProcessResult<T> {
 		if (getClass() != obj.getClass())
 			return false;
 		BaseProcessorResult<?> other = (BaseProcessorResult<?>) obj;
-		return Objects.equals(failure, other.failure) && Objects.equals(value, other.value);
+		return Objects.equals(failure, other.failure)
+			&& Objects.equals(value, other.value)
+			&& Objects.equals(failureMapper, other.failureMapper);
+	}
+
+	@Override
+	public String toString() {
+		return "ProcessorResult" +
+			(isSuccess()
+				? "<Success>: " + value
+				: "<Failure>: " + failure);
 	}
 
 }

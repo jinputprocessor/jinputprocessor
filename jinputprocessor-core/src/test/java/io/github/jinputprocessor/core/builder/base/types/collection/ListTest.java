@@ -1,4 +1,4 @@
-package io.github.jinputprocessor.core.builder.types;
+package io.github.jinputprocessor.core.builder.base.types.collection;
 
 import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.ProcessFailure;
