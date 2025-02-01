@@ -41,14 +41,14 @@ public class InputProcessorTest {
 			var defaultFailureMapper = InputProcessor.getDefaultFailureMapper();
 			synchronized (InputProcessor.class) {
 				try {
-					InputProcessor.setDefaultFailureMapper((inputName, failure) -> new NullPointerException("NPE for " + inputName));
+					InputProcessor.setDefaultFailureMapper(failure -> new NullPointerException("NPE!"));
 					var processor = InputProcessor.builder().forString()
 						.validate(value -> new ValidationError.ObjectIsNull())
 						.build();
 
 					Assertions.assertThatNullPointerException()
-						.isThrownBy(() -> processor.process(null).getOrThrow("myVal"))
-						.withMessage("NPE for myVal");
+						.isThrownBy(() -> processor.process(null).getOrThrow())
+						.withMessage("NPE!");
 				} finally {
 					InputProcessor.setDefaultFailureMapper(defaultFailureMapper);
 					Assertions.assertThat(InputProcessor.getDefaultFailureMapper()).isSameAs(defaultFailureMapper);

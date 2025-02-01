@@ -1,7 +1,7 @@
 package io.github.jinputprocessor.core.builder.types;
 
-import io.github.jinputprocessor.ProcessFailure;
 import io.github.jinputprocessor.InputProcessor;
+import io.github.jinputprocessor.ProcessFailure;
 import io.github.jinputprocessor.ProcessFailure.ValidationError;
 import java.util.List;
 import org.assertj.core.api.Assertions;
@@ -72,13 +72,13 @@ public class ListTest {
 			Assertions.assertThat(actualFailure).isEqualTo(expectedFailure);
 
 			Assertions.assertThatIllegalArgumentException()
-				.isThrownBy(() -> result.getOrThrow("myList"))
-				.withMessage("Multiple failures while processing 'myList'")
+				.isThrownBy(() -> result.getOrThrow())
+				.withMessage("Multiple failures while processing value")
 				.satisfies(e -> {
 					Assertions.assertThat(e.getSuppressed()).hasSize(3);
-					Assertions.assertThat(e.getSuppressed()[0]).hasMessage("Invalid 'myList[0]': must not be empty");
-					Assertions.assertThat(e.getSuppressed()[1]).hasMessage("Invalid 'myList[2]': must not be empty");
-					Assertions.assertThat(e.getSuppressed()[2]).hasMessage("Invalid 'myList[4]': must not be empty");
+					Assertions.assertThat(e.getSuppressed()[0]).hasMessage("Invalid index 0: must not be empty");
+					Assertions.assertThat(e.getSuppressed()[1]).hasMessage("Invalid index 2: must not be empty");
+					Assertions.assertThat(e.getSuppressed()[2]).hasMessage("Invalid index 4: must not be empty");
 				});
 
 		}

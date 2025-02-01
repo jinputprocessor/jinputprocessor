@@ -32,10 +32,9 @@ public interface ProcessResult<T> {
 	/**
 	 * Get the value if process has succeed, or throws an exception if failure.
 	 * 
-	 * @param inputName
 	 * @return
 	 */
-	public @Nonnull T getOrThrow(String inputName);
+	public @Nonnull T getOrThrow();
 
 	/**
 	 * Get the failure if process has failed.
@@ -45,6 +44,15 @@ public interface ProcessResult<T> {
 	 * @throws IllegalStateException if process result is success
 	 */
 	public ProcessFailure getFailure();
+
+	// ===========================================================================================================
+
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public ProcessResult<T> withName(String name);
 
 	// ===========================================================================================================
 

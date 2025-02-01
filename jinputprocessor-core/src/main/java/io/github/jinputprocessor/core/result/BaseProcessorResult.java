@@ -62,11 +62,21 @@ public class BaseProcessorResult<T> implements ProcessResult<T> {
 	}
 
 	@Override
-	public T getOrThrow(String inputName) {
+	public T getOrThrow() {
 		if (isFailure()) {
-			throw failureMapper.mapFailure(inputName, failure);
+			throw failureMapper.mapFailure(failure);
 		}
 		return value;
+	}
+
+	@Override
+	public ProcessResult<T> withName(String name) {
+		var newFailure = failure;
+		if (newFailure != null) {
+			var cleanName = Objects.requireNonNull(name, "name cannot be null").strip();
+			newFailure = new ProcessFailure.NamedFailure(cleanName, failure);
+		}
+		return new BaseProcessorResult<>(value, newFailure, failureMapper);
 	}
 
 	/**

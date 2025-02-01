@@ -1,16 +1,16 @@
-package io.github.jinputprocessor.examples.custom_validation_error;
+package io.github.jinputprocessor.examples;
 
 import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.ProcessFailure;
 import io.github.jinputprocessor.ProcessFailure.ValidationError;
 import io.github.jinputprocessor.ProcessFailure.ValidationError.CustomValidationError;
 
-public class CustomValidationErrorExample {
+public class CustomValidationErrors {
 
 	public static void main(String[] args) {
 
 		/* 
-		 * Configure a processor, with some validations, returning various types of failure depending on the input
+		 * Configure a processor with some validations, returning various types of failure depending on the input
 		 */
 		var processor = InputProcessor.builder().forString()
 			.validate(value -> value.equals("1") ? new MyAppCustomValidationError.CustomError1() : null)
@@ -44,14 +44,15 @@ public class CustomValidationErrorExample {
 				case MyAppCustomValidationError.CustomError1 myAppError1 -> "Failed with MyApp custom error 1";
 				case MyAppCustomValidationError.CustomError2 myAppError2 -> "Failed with MyApp custom error 2";
 			};
-			case CustomValidationError otherCustom -> "Failed with another custom validation error";
+			case CustomValidationErrors otherCustom -> "Failed with another custom validation error";
 			case ValidationError defaultValidationError -> "Failed with a built-in validation error";
 			default -> "Failed with other type of failure";
 		};
 	}
 
 	/**
-	 * 
+	 * A custom validation error interface, extending {@link CustomValidationErrors}
+	 * and declaring two sub-error objects: {@link CustomError1} and {@link CustomError2}.
 	 * 
 	 *
 	 */
@@ -68,7 +69,7 @@ public class CustomValidationErrorExample {
 	}
 
 	/**
-	 * 
+	 * Another custom validation error object, implementing {@link CustomValidationErrors}.
 	 * 
 	 *
 	 */

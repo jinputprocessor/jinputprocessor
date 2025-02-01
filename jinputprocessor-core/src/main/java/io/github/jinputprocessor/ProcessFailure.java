@@ -18,6 +18,14 @@ public sealed interface ProcessFailure {
 	 * 
 	 *
 	 */
+	record NamedFailure(String name, ProcessFailure failure) implements ProcessFailure {
+	}
+
+	/**
+	 * 
+	 * 
+	 *
+	 */
 	record IndexedFailure(int index, ProcessFailure failure) implements ProcessFailure {
 	}
 
