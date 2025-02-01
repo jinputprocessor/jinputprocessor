@@ -43,18 +43,18 @@ public abstract class AbstractNumberValidationBuilder<IN, T extends Number, B ex
 
 	public SELF isGreaterThan(T ref) {
 		builder = builder.validate(
-			value -> isGreaterThan(value, ref)
-				? null
-				: new ValidationError.NumberMustBeGreaterThan(ref)
+			value -> !isGreaterThan(value, ref)
+				? new ValidationError.NumberIsNotGreaterThan<>(ref)
+				: null
 		);
 		return cast();
 	}
 
 	public SELF isGreaterOrEqualTo(T ref) {
 		builder = builder.validate(
-			value -> isGreaterOrEqualTo(value, ref)
-				? null
-				: new ValidationError.NumberMustBeGreaterOrEqualTo(ref)
+			value -> !isGreaterOrEqualTo(value, ref)
+				? new ValidationError.NumberIsNotGreaterOrEqualTo<>(ref)
+				: null
 		);
 		return cast();
 	}

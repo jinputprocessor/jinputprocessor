@@ -60,10 +60,10 @@ public class ToIllegalArgumentProcessorFailureMapper implements ProcessFailureMa
 		return switch (validationError) {
 			case ValidationError.ObjectIsNull err -> "must not be null";
 			case ValidationError.StringIsEmpty err -> "must not be empty";
-			case ValidationError.StringTooLong err -> "must be " + err.maxLength() + " chars max, but is " + err.currentLength();
-			case ValidationError.StringNotParseableToInteger err -> "is not parseable to Integer";
-			case ValidationError.NumberMustBeGreaterThan err -> "must be greater than " + err.ref();
-			case ValidationError.NumberMustBeGreaterOrEqualTo err -> "must be greater or equal to " + err.ref();
+			case ValidationError.StringIsTooLong err -> "must be " + err.maxLength() + " chars max, but is " + err.currentLength();
+			case ValidationError.StringIsNotParseableToInteger err -> "is not parseable to Integer";
+			case ValidationError.NumberIsNotGreaterThan<?> err -> "must be greater than " + err.ref();
+			case ValidationError.NumberIsNotGreaterOrEqualTo<?> err -> "must be greater or equal to " + err.ref();
 
 			case ValidationError.CustomValidationError err -> err.toString();
 		};

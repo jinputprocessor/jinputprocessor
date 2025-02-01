@@ -21,7 +21,7 @@ public class StringValidationBuilder<IN> extends AbstractValidationBuilder<IN, S
 					var i = Integer.parseInt(value);
 					return null;
 				} catch (NumberFormatException e) {
-					return new ValidationError.StringNotParseableToInteger();
+					return new ValidationError.StringIsNotParseableToInteger();
 				}
 			}
 		);
@@ -40,7 +40,7 @@ public class StringValidationBuilder<IN> extends AbstractValidationBuilder<IN, S
 	public StringValidationBuilder<IN> isMaxLength(int maxLength) {
 		builder = builder.validate(
 			value -> value.length() > maxLength
-				? new ValidationError.StringTooLong(value.length(), maxLength)
+				? new ValidationError.StringIsTooLong(value.length(), maxLength)
 				: null
 		);
 		return cast();

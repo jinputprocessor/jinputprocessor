@@ -38,9 +38,9 @@ public class BaseProcessorResult<T> implements ProcessResult<T> {
 		return new BaseProcessorResult<OUT>(value, null, defaultFailureMapper);
 	}
 
-	public static <OUT> BaseProcessorResult<OUT> failure(@Nonnull ProcessFailure error) {
-		Objects.requireNonNull(error);
-		return new BaseProcessorResult<>(null, error, defaultFailureMapper);
+	public static <OUT> BaseProcessorResult<OUT> failure(@Nonnull ProcessFailure failure) {
+		Objects.requireNonNull(failure, "failure cannot be null");
+		return new BaseProcessorResult<>(null, failure, defaultFailureMapper);
 	}
 
 	@Override

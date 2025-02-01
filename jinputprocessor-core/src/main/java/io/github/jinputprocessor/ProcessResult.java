@@ -16,8 +16,18 @@ import jakarta.annotation.Nullable;
  */
 public interface ProcessResult<T> {
 
+	/**
+	 * Test if this result is a success.
+	 * 
+	 * @return	<code>true</code> if this result is a success, <code>false</code> if it is a failure
+	 */
 	public boolean isSuccess();
 
+	/**
+	 * Test if this result is a failure.
+	 * 
+	 * @return	<code>true</code> if this result is a failure, <code>false</code> if it is a success
+	 */
 	public boolean isFailure();
 
 	/**
@@ -42,6 +52,8 @@ public interface ProcessResult<T> {
 	 * @return	The failure
 	 * 
 	 * @throws IllegalStateException if process result is success
+	 * 
+	 * @see ProcessFailure
 	 */
 	public ProcessFailure getFailure();
 
