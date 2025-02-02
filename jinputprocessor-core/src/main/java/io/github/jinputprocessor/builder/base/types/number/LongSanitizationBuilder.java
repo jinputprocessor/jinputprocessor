@@ -7,11 +7,6 @@ public class LongSanitizationBuilder<IN> extends AbstractNumberSanitizationBuild
 	}
 
 	@Override
-	protected LongSanitizationBuilder<IN> cast() {
-		return this;
-	}
-
-	@Override
 	protected boolean isEqualTo(Long value, Long ref) {
 		return value.longValue() == ref.longValue();
 	}

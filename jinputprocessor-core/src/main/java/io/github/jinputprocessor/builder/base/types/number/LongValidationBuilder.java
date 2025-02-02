@@ -7,11 +7,6 @@ public class LongValidationBuilder<IN> extends AbstractNumberValidationBuilder<I
 	}
 
 	@Override
-	protected LongValidationBuilder<IN> cast() {
-		return this;
-	}
-
-	@Override
 	protected Long getZero() {
 		return 0L;
 	}

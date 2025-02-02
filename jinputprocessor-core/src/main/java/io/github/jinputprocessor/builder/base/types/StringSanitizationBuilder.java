@@ -8,24 +8,19 @@ public class StringSanitizationBuilder<IN> extends AbstractSanitizationBuilder<I
 		super(builder);
 	}
 
-	@Override
-	protected StringSanitizationBuilder<IN> cast() {
-		return this;
-	}
-
 	public StringSanitizationBuilder<IN> strip() {
 		builder = builder.sanitize(String::strip);
-		return this;
+		return cast();
 	}
 
 	public StringSanitizationBuilder<IN> toUpperCase() {
 		builder = builder.sanitize(String::toUpperCase);
-		return this;
+		return cast();
 	}
 
 	public StringSanitizationBuilder<IN> toLowerCase() {
 		builder = builder.sanitize(String::toLowerCase);
-		return this;
+		return cast();
 	}
 
 }

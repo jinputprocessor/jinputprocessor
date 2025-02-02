@@ -13,11 +13,6 @@ public class IntegerInputProcessorBuilder<IN> extends AbstractNumberInputProcess
 		return new IntegerInputProcessorBuilder<>(InputProcessors.noOpProcessor());
 	}
 
-	@Override
-	protected IntegerInputProcessorBuilder<IN> cast() {
-		return this;
-	}
-
 	public IntegerSanitizationBuilder<IN> sanitize() {
 		return new IntegerSanitizationBuilder<>(this);
 	}

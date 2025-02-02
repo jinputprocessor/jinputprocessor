@@ -22,9 +22,4 @@ public class ObjectInputProcessorBuilder<IN, OUT> extends AbstractInputProcessor
 		return new ObjectValidationBuilder<>(this);
 	}
 
-	@Override
-	protected ObjectInputProcessorBuilder<IN, OUT> cast() {
-		return this;
-	}
-
 }

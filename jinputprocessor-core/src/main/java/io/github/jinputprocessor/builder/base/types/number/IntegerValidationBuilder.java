@@ -7,11 +7,6 @@ public class IntegerValidationBuilder<IN> extends AbstractNumberValidationBuilde
 	}
 
 	@Override
-	protected IntegerValidationBuilder<IN> cast() {
-		return this;
-	}
-
-	@Override
 	protected Integer getZero() {
 		return 0;
 	}

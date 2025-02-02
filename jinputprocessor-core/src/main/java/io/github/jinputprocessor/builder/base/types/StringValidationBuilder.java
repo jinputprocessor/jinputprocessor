@@ -9,11 +9,6 @@ public class StringValidationBuilder<IN> extends AbstractValidationBuilder<IN, S
 		super(builder);
 	}
 
-	@Override
-	protected StringValidationBuilder<IN> cast() {
-		return this;
-	}
-
 	public StringValidationBuilder<IN> canBeParsedToInteger() {
 		builder = builder.validate(
 			value -> {

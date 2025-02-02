@@ -33,7 +33,10 @@ public abstract class AbstractInputProcessorBuilder<IN, OUT, SELF extends Abstra
 		return cast();
 	}
 
-	protected abstract SELF cast();
+	@SuppressWarnings("unchecked")
+	protected final SELF cast() {
+		return (SELF) this;
+	}
 
 	@Override
 	public <NEW_OUT> InputProcessorBuilder<IN, NEW_OUT, ?> mapTo(Function<OUT, NEW_OUT> mappingFunction) {

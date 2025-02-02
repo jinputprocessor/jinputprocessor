@@ -16,11 +16,6 @@ public class StringInputProcessorBuilder<IN> extends AbstractInputProcessorBuild
 		return new StringInputProcessorBuilder<>(InputProcessors.noOpProcessor());
 	}
 
-	@Override
-	protected StringInputProcessorBuilder<IN> cast() {
-		return this;
-	}
-
 	public StringSanitizationBuilder<IN> sanitize() {
 		return new StringSanitizationBuilder<>(this);
 	}

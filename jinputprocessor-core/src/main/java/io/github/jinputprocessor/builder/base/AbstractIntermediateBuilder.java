@@ -20,7 +20,10 @@ abstract class AbstractIntermediateBuilder<IN, T, B extends InputProcessorBuilde
 		this.builder = Objects.requireNonNull(builder);
 	}
 
-	protected abstract SELF cast();
+	@SuppressWarnings("unchecked")
+	protected final SELF cast() {
+		return (SELF) this;
+	}
 
 	public B then() {
 		return builder;

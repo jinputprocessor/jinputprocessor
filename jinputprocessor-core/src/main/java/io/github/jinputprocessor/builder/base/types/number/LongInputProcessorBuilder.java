@@ -13,11 +13,6 @@ public class LongInputProcessorBuilder<IN> extends AbstractNumberInputProcessorB
 		return new LongInputProcessorBuilder<>(InputProcessors.noOpProcessor());
 	}
 
-	@Override
-	protected LongInputProcessorBuilder<IN> cast() {
-		return this;
-	}
-
 	public LongSanitizationBuilder<IN> sanitize() {
 		return new LongSanitizationBuilder<>(this);
 	}

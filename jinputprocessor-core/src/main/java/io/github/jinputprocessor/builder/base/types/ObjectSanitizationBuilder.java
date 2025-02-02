@@ -8,9 +8,4 @@ public class ObjectSanitizationBuilder<IN, OUT> extends AbstractSanitizationBuil
 		super(builder);
 	}
 
-	@Override
-	protected ObjectSanitizationBuilder<IN, OUT> cast() {
-		return this;
-	}
-
 }

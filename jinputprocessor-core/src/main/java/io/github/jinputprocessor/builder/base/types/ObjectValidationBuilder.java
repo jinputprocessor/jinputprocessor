@@ -8,9 +8,4 @@ public class ObjectValidationBuilder<IN, OUT> extends AbstractValidationBuilder<
 		super(builder);
 	}
 
-	@Override
-	protected ObjectValidationBuilder<IN, OUT> cast() {
-		return this;
-	}
-
 }

@@ -24,9 +24,4 @@ public class ListInputProcessorBuilder<IN, T> extends AbstractSequencedCollectio
 		return processEach(elementProcessor, collector, ListInputProcessorBuilder::new);
 	}
 
-	@Override
-	protected ListInputProcessorBuilder<IN, T> cast() {
-		return this;
-	}
-
 }

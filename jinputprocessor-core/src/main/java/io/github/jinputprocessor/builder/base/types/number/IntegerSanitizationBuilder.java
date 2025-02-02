@@ -7,11 +7,6 @@ public class IntegerSanitizationBuilder<IN> extends AbstractNumberSanitizationBu
 	}
 
 	@Override
-	protected IntegerSanitizationBuilder<IN> cast() {
-		return this;
-	}
-
-	@Override
 	protected boolean isEqualTo(Integer value, Integer ref) {
 		return value.intValue() == ref.intValue();
 	}
