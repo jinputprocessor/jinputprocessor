@@ -18,7 +18,7 @@ public abstract class AbstractSequencedCollectionInputProcessorBuilder<IN, C ext
 		InputProcessor<T, OUT> elementProcessor, Collector<OUT, ?, C_OUT> collector, Function<InputProcessor<IN, C_OUT>, B> builderFunction
 	) {
 		InputProcessor<C, C_OUT> forEachProcess = new SequencedCollectionIterationProcessor<>(elementProcessor, collector);
-		return builderFunction.apply(this.process.andThen(forEachProcess));
+		return builderFunction.apply(getProcess().andThen(forEachProcess));
 	}
 
 }

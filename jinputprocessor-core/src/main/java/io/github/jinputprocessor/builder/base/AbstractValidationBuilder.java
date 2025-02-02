@@ -10,7 +10,7 @@ public abstract class AbstractValidationBuilder<IN, T, B extends InputProcessorB
 		super(builder);
 	}
 
-	public SELF isNotNull() {
+	public final SELF isNotNull() {
 		builder = builder.validate(
 			value -> value == null
 				? new ValidationError.ObjectIsNull()

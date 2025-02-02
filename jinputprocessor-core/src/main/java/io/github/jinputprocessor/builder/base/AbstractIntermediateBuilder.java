@@ -11,7 +11,7 @@ import java.util.Objects;
  * @param <T>
  * @param <B>
  */
-public abstract class AbstractIntermediateBuilder<IN, T, B extends InputProcessorBuilder<IN, T, B>, SELF extends AbstractIntermediateBuilder<IN, T, B, SELF>> {
+abstract class AbstractIntermediateBuilder<IN, T, B extends InputProcessorBuilder<IN, T, B>, SELF extends AbstractIntermediateBuilder<IN, T, B, SELF>> {
 
 	protected B builder;
 

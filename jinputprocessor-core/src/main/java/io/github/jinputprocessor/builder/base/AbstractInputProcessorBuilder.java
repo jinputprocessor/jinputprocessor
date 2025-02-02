@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 public abstract class AbstractInputProcessorBuilder<IN, OUT, SELF extends AbstractInputProcessorBuilder<IN, OUT, SELF>> implements InputProcessorBuilder<IN, OUT, SELF> {
 
-	protected @Nonnull InputProcessor<IN, OUT> process;
+	private @Nonnull InputProcessor<IN, OUT> process;
 
 	public AbstractInputProcessorBuilder(InputProcessor<IN, OUT> previous) {
 		this.process = Objects.requireNonNull(previous);
@@ -45,6 +45,10 @@ public abstract class AbstractInputProcessorBuilder<IN, OUT, SELF extends Abstra
 		Function<OUT, NEW_OUT> mappingFunction, Function<InputProcessor<IN, NEW_OUT>, B> builderFunction
 	) {
 		return builderFunction.apply(InputProcessors.mappingProcessor(this.process, mappingFunction));
+	}
+
+	protected InputProcessor<IN, OUT> getProcess() {
+		return process;
 	}
 
 	@Override

@@ -9,7 +9,7 @@ public abstract class AbstractSanitizationBuilder<IN, T, B extends InputProcesso
 		super(builder);
 	}
 
-	public SELF defaultIfNull(T nullSafeValue) {
+	public final SELF defaultIfNull(T nullSafeValue) {
 		builder = builder.sanitize(value -> value == null ? nullSafeValue : value);
 		return cast();
 	}
