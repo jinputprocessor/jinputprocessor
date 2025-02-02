@@ -14,6 +14,14 @@ public class ObjectInputProcessorBuilder<IN, OUT> extends AbstractInputProcessor
 		return new ObjectInputProcessorBuilder<>(InputProcessors.noOpProcessor());
 	}
 
+	public ObjectSanitizationBuilder<IN, OUT> sanitize() {
+		return new ObjectSanitizationBuilder<>(this);
+	}
+
+	public ObjectValidationBuilder<IN, OUT> validateThat() {
+		return new ObjectValidationBuilder<>(this);
+	}
+
 	@Override
 	protected ObjectInputProcessorBuilder<IN, OUT> cast() {
 		return this;
