@@ -9,6 +9,11 @@ public class IntegerInputProcessorBuilder<IN> extends AbstractNumberInputProcess
 		super(previous);
 	}
 
+	@Override
+	protected IntegerInputProcessorBuilder<IN> newInstance(InputProcessor<IN, Integer> process) {
+		return new IntegerInputProcessorBuilder<>(process);
+	}
+
 	public static IntegerInputProcessorBuilder<Integer> newInstance() {
 		return new IntegerInputProcessorBuilder<>(InputProcessors.noOpProcessor());
 	}

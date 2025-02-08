@@ -10,12 +10,12 @@ import java.util.Collection;
  */
 public sealed interface ProcessFailure {
 
-	default ProcessFailure at(String attr) {
-		return new PathFailure(Path.atRoot(attr), this);
+	default ProcessFailure atProperty(String property) {
+		return new PathFailure(Path.createPropertyPath(property), this);
 	}
 
 	default ProcessFailure atIndex(int index) {
-		return new PathFailure(Path.atRootIndex(index), this);
+		return new PathFailure(Path.createIndexPath(index), this);
 	}
 
 	/**
@@ -26,6 +26,15 @@ public sealed interface ProcessFailure {
 	 * @param exception		The exception
 	 */
 	record UnexpectedException(Object value, Throwable exception) implements ProcessFailure {
+
+//		@Override
+//		public final String toString() {
+//			if (exception != null) {
+//				exception.printStackTrace();
+//			}
+//			return "UnexpectedException / value=" + value + " / exception=" + exception;
+//		}
+
 	}
 
 	/**
@@ -34,8 +43,8 @@ public sealed interface ProcessFailure {
 	record PathFailure(Path path, ProcessFailure failure) implements ProcessFailure {
 
 		@Override
-		public ProcessFailure at(String attr) {
-			return new PathFailure(path.at(attr), failure);
+		public ProcessFailure atProperty(String property) {
+			return new PathFailure(path.atProperty(property), failure);
 		}
 
 		@Override

@@ -1,4 +1,6 @@
-package io.github.jinputprocessor;
+package io.github.jinputprocessor.result;
+
+import io.github.jinputprocessor.ProcessFailure;
 
 @FunctionalInterface
 public interface ProcessFailureMapper {

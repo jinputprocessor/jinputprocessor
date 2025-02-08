@@ -4,29 +4,29 @@ public sealed interface Path {
 
 	String format();
 
-	static Path atRoot(String attr) {
-		return new AttributePath(null, attr);
+	static Path createPropertyPath(String property) {
+		return new PropertyPath(null, property);
 	}
 
-	static Path atRootIndex(int index) {
+	static Path createIndexPath(int index) {
 		return new IndexPath(null, index);
 	}
 
-	default Path at(String attr) {
-		return new AttributePath(this, attr);
+	default Path atProperty(String property) {
+		return new PropertyPath(this, property);
 	}
 
 	default Path atIndex(int index) {
 		return new IndexPath(this, index);
 	}
 
-	record AttributePath(Path parent, String attr) implements Path {
+	record PropertyPath(Path parent, String property) implements Path {
 
 		@Override
 		public String format() {
 			return parent == null
-				? attr
-				: parent.format() + "." + attr;
+				? property
+				: parent.format() + "." + property;
 		}
 
 	}

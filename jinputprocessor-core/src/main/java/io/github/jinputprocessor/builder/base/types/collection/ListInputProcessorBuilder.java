@@ -12,6 +12,11 @@ public class ListInputProcessorBuilder<IN, T> extends AbstractSequencedCollectio
 		super(previous);
 	}
 
+	@Override
+	protected ListInputProcessorBuilder<IN, T> newInstance(InputProcessor<IN, List<T>> process) {
+		return new ListInputProcessorBuilder<>(process);
+	}
+
 	public static <T> ListInputProcessorBuilder<List<T>, T> newInstance() {
 		return new ListInputProcessorBuilder<>(InputProcessors.noOpProcessor());
 	}

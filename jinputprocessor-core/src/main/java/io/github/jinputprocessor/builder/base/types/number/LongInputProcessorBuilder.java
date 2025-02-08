@@ -9,6 +9,11 @@ public class LongInputProcessorBuilder<IN> extends AbstractNumberInputProcessorB
 		super(previous);
 	}
 
+	@Override
+	protected LongInputProcessorBuilder<IN> newInstance(InputProcessor<IN, Long> process) {
+		return new LongInputProcessorBuilder<>(process);
+	}
+
 	public static LongInputProcessorBuilder<Long> newInstance() {
 		return new LongInputProcessorBuilder<>(InputProcessors.noOpProcessor());
 	}

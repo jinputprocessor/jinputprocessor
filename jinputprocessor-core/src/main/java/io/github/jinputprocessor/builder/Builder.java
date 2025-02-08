@@ -4,6 +4,7 @@ import io.github.jinputprocessor.builder.base.types.ObjectInputProcessorBuilder;
 import io.github.jinputprocessor.builder.base.types.StringInputProcessorBuilder;
 import io.github.jinputprocessor.builder.base.types.collection.ListInputProcessorBuilder;
 import io.github.jinputprocessor.builder.base.types.number.IntegerInputProcessorBuilder;
+import io.github.jinputprocessor.builder.base.types.number.LongInputProcessorBuilder;
 import java.util.List;
 
 public final class Builder {
@@ -25,6 +26,10 @@ public final class Builder {
 
 	public IntegerInputProcessorBuilder<Integer> forInteger() {
 		return IntegerInputProcessorBuilder.newInstance();
+	}
+
+	public LongInputProcessorBuilder<Long> forLong() {
+		return LongInputProcessorBuilder.newInstance();
 	}
 
 	@SuppressWarnings("unused")

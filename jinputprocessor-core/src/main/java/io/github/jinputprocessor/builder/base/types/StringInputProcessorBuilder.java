@@ -12,6 +12,11 @@ public class StringInputProcessorBuilder<IN> extends AbstractInputProcessorBuild
 		super(previous);
 	}
 
+	@Override
+	protected StringInputProcessorBuilder<IN> newInstance(InputProcessor<IN, String> process) {
+		return new StringInputProcessorBuilder<>(process);
+	}
+
 	public static StringInputProcessorBuilder<String> newInstance() {
 		return new StringInputProcessorBuilder<>(InputProcessors.noOpProcessor());
 	}

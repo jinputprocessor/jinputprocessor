@@ -1,7 +1,6 @@
 package io.github.jinputprocessor.result;
 
 import io.github.jinputprocessor.ProcessFailure;
-import io.github.jinputprocessor.ProcessFailureMapper;
 import io.github.jinputprocessor.ProcessResult;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -74,7 +73,7 @@ public class BaseProcessorResult<T> implements ProcessResult<T> {
 		var newFailure = failure;
 		if (newFailure != null) {
 			var cleanName = Objects.requireNonNull(name, "name cannot be null").strip();
-			newFailure = failure.at(cleanName);
+			newFailure = failure.atProperty(cleanName);
 		}
 		return new BaseProcessorResult<>(value, newFailure, failureMapper);
 	}

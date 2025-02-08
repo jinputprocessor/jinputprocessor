@@ -3,7 +3,6 @@ package io.github.jinputprocessor.result;
 import io.github.jinputprocessor.Path;
 import io.github.jinputprocessor.ProcessFailure;
 import io.github.jinputprocessor.ProcessFailure.ValidationError;
-import io.github.jinputprocessor.ProcessFailureMapper;
 
 public class ToIllegalArgumentProcessorFailureMapper implements ProcessFailureMapper {
 
@@ -23,7 +22,7 @@ public class ToIllegalArgumentProcessorFailureMapper implements ProcessFailureMa
 
 	private IllegalArgumentException mapNamedFailure(String inputName, ProcessFailure.PathFailure failure) {
 		return switch (failure.path()) {
-			case Path.AttributePath attrPath -> mapFailure((inputName.isEmpty() ? "" : ".") + attrPath.attr(), failure.failure());
+			case Path.PropertyPath attrPath -> mapFailure((inputName.isEmpty() ? "" : ".") + attrPath.property(), failure.failure());
 			case Path.IndexPath indexPath -> mapFailure(formatInputName(inputName, indexPath.index()), failure.failure());
 		};
 	}

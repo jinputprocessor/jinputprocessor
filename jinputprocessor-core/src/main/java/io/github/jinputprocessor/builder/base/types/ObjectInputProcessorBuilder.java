@@ -10,6 +10,11 @@ public class ObjectInputProcessorBuilder<IN, OUT> extends AbstractInputProcessor
 		super(previous);
 	}
 
+	@Override
+	protected ObjectInputProcessorBuilder<IN, OUT> newInstance(InputProcessor<IN, OUT> process) {
+		return new ObjectInputProcessorBuilder<>(process);
+	}
+
 	public static <OUT> ObjectInputProcessorBuilder<OUT, OUT> newInstance() {
 		return new ObjectInputProcessorBuilder<>(InputProcessors.noOpProcessor());
 	}
