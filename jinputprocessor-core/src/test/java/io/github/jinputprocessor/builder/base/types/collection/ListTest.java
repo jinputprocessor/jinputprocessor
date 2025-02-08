@@ -64,9 +64,9 @@ public class ListTest {
 			var actualFailure = result.getFailure();
 			var expectedFailure = new ProcessFailure.MultiFailure(
 				List.of(
-					new ProcessFailure.IndexedFailure(0, new ValidationError.StringIsEmpty()),
-					new ProcessFailure.IndexedFailure(2, new ValidationError.StringIsEmpty()),
-					new ProcessFailure.IndexedFailure(4, new ValidationError.StringIsEmpty())
+					(new ValidationError.StringIsEmpty()).atIndex(0),
+					(new ValidationError.StringIsEmpty()).atIndex(2),
+					(new ValidationError.StringIsEmpty()).atIndex(4)
 				)
 			);
 			Assertions.assertThat(actualFailure).isEqualTo(expectedFailure);

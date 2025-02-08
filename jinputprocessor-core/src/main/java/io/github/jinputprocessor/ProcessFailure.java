@@ -10,6 +10,14 @@ import java.util.Collection;
  */
 public sealed interface ProcessFailure {
 
+	default ProcessFailure at(String attr) {
+		return new PathFailure(Path.atRoot(attr), this);
+	}
+
+	default ProcessFailure atIndex(int index) {
+		return new PathFailure(Path.atRootIndex(index), this);
+	}
+
 	/**
 	 * An unexpected exception that occured within an processor, like a {@link NullPointerException}.
 	 * 
@@ -21,15 +29,20 @@ public sealed interface ProcessFailure {
 	}
 
 	/**
-	 * A failure that occured on an named variable/attribute.
+	 * A failure that occured within a given path.
 	 */
-	record NamedFailure(String name, ProcessFailure failure) implements ProcessFailure {
-	}
+	record PathFailure(Path path, ProcessFailure failure) implements ProcessFailure {
 
-	/**
-	 * A failure that occurred at a particular index (array, sequenced collection, etc.).
-	 */
-	record IndexedFailure(int index, ProcessFailure failure) implements ProcessFailure {
+		@Override
+		public ProcessFailure at(String attr) {
+			return new PathFailure(path.at(attr), failure);
+		}
+
+		@Override
+		public ProcessFailure atIndex(int index) {
+			return new PathFailure(path.atIndex(index), failure);
+		}
+
 	}
 
 	/**

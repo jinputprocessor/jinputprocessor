@@ -30,7 +30,7 @@ public class SequencedCollectionIterationProcessor<C_IN extends SequencedCollect
 
 		var errors = resultList.stream()
 			.filter(Result::isError)
-			.map(result -> new ProcessFailure.IndexedFailure(result.elemIndex, result.error))
+			.map(result -> result.error.atIndex(result.elemIndex))
 			.toList();
 		if (!errors.isEmpty()) {
 			return BaseProcessorResult.failure(new ProcessFailure.MultiFailure(errors));

@@ -74,7 +74,7 @@ public class BaseProcessorResult<T> implements ProcessResult<T> {
 		var newFailure = failure;
 		if (newFailure != null) {
 			var cleanName = Objects.requireNonNull(name, "name cannot be null").strip();
-			newFailure = new ProcessFailure.NamedFailure(cleanName, failure);
+			newFailure = failure.at(cleanName);
 		}
 		return new BaseProcessorResult<>(value, newFailure, failureMapper);
 	}
