@@ -27,7 +27,7 @@ class ProcessResultTest {
 		void failure() {
 			var error = new ValidationError.ObjectIsNull();
 			ProcessResultAssert.assertThat(ProcessResult.failure(error))
-				.isFailureWithValidationError(error);
+				.isFailure(error);
 		}
 
 	}

@@ -1,7 +1,7 @@
 package io.github.jinputprocessor;
 
 import io.github.jinputprocessor.processor.ValidationProcessor;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * An Interface regrouping all possible failures of a {@link ProcessResult}.
@@ -12,6 +12,10 @@ public sealed interface ProcessFailure {
 
 	default ProcessFailure atPath(Path path) {
 		return new PathFailure(path, this);
+	}
+
+	default Path getPath() {
+		return Path.atRoot();
 	}
 
 	/**
@@ -43,17 +47,17 @@ public sealed interface ProcessFailure {
 			return new PathFailure(path.atPath(superPath), failure);
 		}
 
+		@Override
+		public Path getPath() {
+			return path;
+		}
+
 	}
 
 	/**
 	 * A failure that regroups multiple other failures (collection, etc.).
 	 */
-	record MultiFailure(Collection<? extends ProcessFailure> failures) implements ProcessFailure {
-
-		@Override
-		public ProcessFailure atPath(Path path) {
-			return new PathFailure(path, new MultiFailure(failures.stream().map(failure -> failure.atPath(path)).toList()));
-		}
+	record MultiFailure(List<? extends ProcessFailure> failures) implements ProcessFailure {
 
 	}
 
@@ -101,6 +105,13 @@ public sealed interface ProcessFailure {
 		}
 
 		record NumberIsNotGreaterOrEqualTo<T extends Number>(T ref) implements ValidationError {
+		}
+
+		// ===========================================================================
+		// COLLECTION
+
+		record CollectionIsEmpty() implements ValidationError {
+
 		}
 
 	}

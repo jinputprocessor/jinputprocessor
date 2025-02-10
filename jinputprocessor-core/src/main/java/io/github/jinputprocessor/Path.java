@@ -1,27 +1,39 @@
 package io.github.jinputprocessor;
 
+import java.util.Objects;
+
 public sealed interface Path {
 
+	/**
+	 * Format this path into a human readable form: "lastName", "myList[0]", etc.
+	 * 
+	 * @return
+	 */
 	String format();
 
+	/**
+	 * Create a new path at root (no property, no index).
+	 * 
+	 * @return
+	 */
 	static Path atRoot() {
 		return new RootPath();
 	}
 
 	static Path createPropertyPath(String property) {
-		return atRoot().atProperty(property);
+		return new PropertyPath(atRoot(), property);
 	}
 
 	static Path createIndexPath(int index) {
-		return atRoot().atIndex(index);
+		return new IndexPath(atRoot(), index);
 	}
 
 	default Path atProperty(String property) {
-		return new PropertyPath(this, property);
+		return atPath(createPropertyPath(property));
 	}
 
 	default Path atIndex(int index) {
-		return new IndexPath(this, index);
+		return atPath(createIndexPath(index));
 	}
 
 	Path atPath(Path superPath);
@@ -30,7 +42,7 @@ public sealed interface Path {
 
 		@Override
 		public String format() {
-			return "";
+			return "value";
 		}
 
 		@Override
@@ -42,8 +54,16 @@ public sealed interface Path {
 
 	record PropertyPath(Path parent, String property) implements Path {
 
+		public PropertyPath(Path parent, String property) {
+			this.parent = Objects.requireNonNull(parent, "parent path cannot be null");
+			this.property = Objects.requireNonNull(property, "property path cannot be null");
+		}
+
 		@Override
 		public String format() {
+			if (parent instanceof RootPath) {
+				return property;
+			}
 			return parent.format() + "." + property;
 		}
 
@@ -56,8 +76,19 @@ public sealed interface Path {
 
 	record IndexPath(Path parent, int index) implements Path {
 
+		public IndexPath(Path parent, int index) {
+			this.parent = Objects.requireNonNull(parent, "parent path cannot be null");
+			if (index < 0) {
+				throw new IllegalArgumentException("index path cannot be negative: " + index);
+			}
+			this.index = index;
+		}
+
 		@Override
 		public String format() {
+			if (parent instanceof RootPath) {
+				return "index [" + index + "]";
+			}
 			return parent.format() + "[" + index + "]";
 		}
 

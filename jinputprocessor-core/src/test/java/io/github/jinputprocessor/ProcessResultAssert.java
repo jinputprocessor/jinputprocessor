@@ -1,6 +1,5 @@
 package io.github.jinputprocessor;
 
-import io.github.jinputprocessor.ProcessFailure.ValidationError;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
 
@@ -26,7 +25,7 @@ public class ProcessResultAssert<T> extends AbstractAssert<ProcessResultAssert<T
 		isSuccess();
 		Assertions.assertThat(actual.get())
 			.as(descriptionText())
-			.overridingErrorMessage("Expected process result to have value:\n%s\nbut has:\n%s", expectedValue, actual.get())
+			.overridingErrorMessage("Expected process result to have value:\n  %s\nbut has:\n  %s", expectedValue, actual.get())
 			.isEqualTo(expectedValue);
 		return this;
 	}
@@ -39,12 +38,12 @@ public class ProcessResultAssert<T> extends AbstractAssert<ProcessResultAssert<T
 		return this;
 	}
 
-	public ProcessResultAssert<T> isFailureWithValidationError(ValidationError expectedError) {
+	public ProcessResultAssert<T> isFailure(ProcessFailure expectedFailure) {
 		isFailure();
 		Assertions.assertThat(actual.getFailure())
 			.as(descriptionText())
-			.overridingErrorMessage(() -> "Expected process result failed with error:\n" + expectedError + ", but failed with error:\n" + actual.getFailure())
-			.isEqualTo(expectedError);
+			.overridingErrorMessage(() -> "Expected process result failed because of:\n  " + expectedFailure + "\nbut failed because of:\n  " + actual.getFailure())
+			.isEqualTo(expectedFailure);
 		return this;
 	}
 

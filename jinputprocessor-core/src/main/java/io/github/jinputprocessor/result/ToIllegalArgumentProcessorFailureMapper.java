@@ -8,61 +8,50 @@ public class ToIllegalArgumentProcessorFailureMapper implements ProcessFailureMa
 
 	@Override
 	public IllegalArgumentException mapFailure(ProcessFailure failure) {
-		return mapFailure("", failure);
+		return mapFailure(Path.atRoot(), failure);
 	}
 
-	public IllegalArgumentException mapFailure(String inputName, ProcessFailure failure) {
+	public IllegalArgumentException mapFailure(Path parentPath, ProcessFailure failure) {
 		return switch (failure) {
-			case ProcessFailure.PathFailure namedFail -> mapNamedFailure(inputName, namedFail);
-			case ProcessFailure.MultiFailure multiFail -> mapMultiFailure(inputName, multiFail);
-			case ProcessFailure.UnexpectedException unexpFail -> mapUnexpectedFailure(inputName, unexpFail);
-			case ProcessFailure.ValidationError validationError -> mapValidationError(inputName, validationError);
+			case ProcessFailure.PathFailure namedFail -> mapPathFailure(parentPath, namedFail);
+			case ProcessFailure.MultiFailure multiFail -> mapMultiFailure(parentPath, multiFail);
+			case ProcessFailure.UnexpectedException unexpFail -> mapUnexpectedFailure(parentPath, unexpFail);
+			case ProcessFailure.ValidationError validationError -> mapValidationError(parentPath, validationError);
 		};
 	}
 
-	private IllegalArgumentException mapNamedFailure(String inputName, ProcessFailure.PathFailure failure) {
-		return switch (failure.path()) {
-			case Path.RootPath rootPath -> mapFailure(inputName, failure.failure());
-			case Path.PropertyPath attrPath -> mapFailure((inputName.isEmpty() ? "" : ".") + attrPath.property(), failure.failure());
-			case Path.IndexPath indexPath -> mapFailure(formatInputName(inputName, indexPath.index()), failure.failure());
-		};
+	private IllegalArgumentException mapPathFailure(Path parentPath, ProcessFailure.PathFailure failure) {
+		return mapFailure(failure.getPath().atPath(parentPath), failure.failure());
 	}
 
-	private IllegalArgumentException mapMultiFailure(String inputName, ProcessFailure.MultiFailure failure) {
-		var exception = new IllegalArgumentException("Multiple failures while processing " + formatInputName(inputName));
+	private IllegalArgumentException mapMultiFailure(Path path, ProcessFailure.MultiFailure failure) {
+		var exception = new IllegalArgumentException("Multiple failures while processing " + path.format());
 		failure.failures().stream()
-			.map(failureItem -> mapFailure(inputName, failureItem))
+			.map(failureItem -> mapFailure(path, failureItem))
 			.forEach(exception::addSuppressed);
 		return exception;
 	}
 
-	private IllegalArgumentException mapUnexpectedFailure(String inputName, ProcessFailure.UnexpectedException failure) {
-		return new IllegalArgumentException("Unexpected exception while processing " + formatInputName(inputName), failure.exception());
+	private IllegalArgumentException mapUnexpectedFailure(Path path, ProcessFailure.UnexpectedException failure) {
+		return new IllegalArgumentException("Unexpected exception while processing " + path.format(), failure.exception());
 	}
 
-	private IllegalArgumentException mapValidationError(String inputName, ValidationError validationError) {
-		return new IllegalArgumentException("Invalid " + formatInputName(inputName) + ": " + validationErrorToString(validationError));
-	}
-
-	private String formatInputName(String inputName, int index) {
-		if (inputName.isEmpty()) {
-			return "index " + index;
-		}
-		return formatInputName(inputName) + "[" + index + "]";
-	}
-
-	private String formatInputName(String inputName) {
-		return inputName.isEmpty() ? "value" : inputName;
+	private IllegalArgumentException mapValidationError(Path path, ValidationError validationError) {
+		return new IllegalArgumentException("Invalid " + path.format() + ": " + validationErrorToString(validationError));
 	}
 
 	private String validationErrorToString(ValidationError validationError) {
 		return switch (validationError) {
 			case ValidationError.ObjectIsNull err -> "must not be null";
+
 			case ValidationError.StringIsEmpty err -> "must not be empty";
 			case ValidationError.StringIsTooLong err -> "must be " + err.maxLength() + " chars max, but is " + err.currentLength();
 			case ValidationError.StringIsNotParseableToInteger err -> "is not parseable to Integer";
+
 			case ValidationError.NumberIsNotGreaterThan<?> err -> "must be greater than " + err.ref();
 			case ValidationError.NumberIsNotGreaterOrEqualTo<?> err -> "must be greater or equal to " + err.ref();
+
+			case ValidationError.CollectionIsEmpty err -> "collection is empty";
 
 			case ValidationError.CustomValidationError err -> err.toString();
 		};

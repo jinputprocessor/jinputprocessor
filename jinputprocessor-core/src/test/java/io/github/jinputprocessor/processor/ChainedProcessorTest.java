@@ -2,14 +2,13 @@ package io.github.jinputprocessor.processor;
 
 import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.ProcessFailure.ValidationError;
-import io.github.jinputprocessor.processor.ChainedProcessor;
 import io.github.jinputprocessor.ProcessResult;
 import io.github.jinputprocessor.ProcessResultAssert;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class ChainedProcessorTest {
+class ChainedProcessorTest {
 
 	@Test
 	void nominal() {

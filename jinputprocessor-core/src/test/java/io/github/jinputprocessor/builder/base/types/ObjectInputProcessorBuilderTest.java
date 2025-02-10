@@ -6,7 +6,7 @@ import io.github.jinputprocessor.ProcessResultAssert;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-public class ObjectInputProcessorBuilderTest {
+class ObjectInputProcessorBuilderTest {
 
 	static final ObjectInputProcessorBuilder<Object, Object> BUILDER = InputProcessor.builder().forClass(Object.class);
 
@@ -73,7 +73,7 @@ public class ObjectInputProcessorBuilderTest {
 			@Test
 			void when_null_then_failure() {
 				var actual = PROCESSOR.process(null);
-				ProcessResultAssert.assertThat(actual).isFailureWithValidationError(new ObjectIsNull());
+				ProcessResultAssert.assertThat(actual).isFailure(new ObjectIsNull());
 			}
 
 			@Test

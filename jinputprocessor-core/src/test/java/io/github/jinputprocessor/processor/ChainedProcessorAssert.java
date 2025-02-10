@@ -1,7 +1,6 @@
 package io.github.jinputprocessor.processor;
 
 import io.github.jinputprocessor.InputProcessor;
-import io.github.jinputprocessor.processor.ChainedProcessor;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
 

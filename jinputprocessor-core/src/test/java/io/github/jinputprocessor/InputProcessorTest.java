@@ -5,7 +5,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-public class InputProcessorTest {
+class InputProcessorTest {
 
 	@Nested
 	class Process {
