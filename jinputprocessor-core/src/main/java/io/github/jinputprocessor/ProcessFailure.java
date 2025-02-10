@@ -10,12 +10,8 @@ import java.util.Collection;
  */
 public sealed interface ProcessFailure {
 
-	default ProcessFailure atProperty(String property) {
-		return new PathFailure(Path.createPropertyPath(property), this);
-	}
-
-	default ProcessFailure atIndex(int index) {
-		return new PathFailure(Path.createIndexPath(index), this);
+	default ProcessFailure atPath(Path path) {
+		return new PathFailure(path, this);
 	}
 
 	/**
@@ -43,13 +39,8 @@ public sealed interface ProcessFailure {
 	record PathFailure(Path path, ProcessFailure failure) implements ProcessFailure {
 
 		@Override
-		public ProcessFailure atProperty(String property) {
-			return new PathFailure(path.atProperty(property), failure);
-		}
-
-		@Override
-		public ProcessFailure atIndex(int index) {
-			return new PathFailure(path.atIndex(index), failure);
+		public ProcessFailure atPath(Path superPath) {
+			return new PathFailure(path.atPath(superPath), failure);
 		}
 
 	}
@@ -58,6 +49,12 @@ public sealed interface ProcessFailure {
 	 * A failure that regroups multiple other failures (collection, etc.).
 	 */
 	record MultiFailure(Collection<? extends ProcessFailure> failures) implements ProcessFailure {
+
+		@Override
+		public ProcessFailure atPath(Path path) {
+			return new PathFailure(path, new MultiFailure(failures.stream().map(failure -> failure.atPath(path)).toList()));
+		}
+
 	}
 
 	/**

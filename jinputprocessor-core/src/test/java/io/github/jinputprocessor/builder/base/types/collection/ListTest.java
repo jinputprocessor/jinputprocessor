@@ -1,6 +1,7 @@
 package io.github.jinputprocessor.builder.base.types.collection;
 
 import io.github.jinputprocessor.InputProcessor;
+import io.github.jinputprocessor.Path;
 import io.github.jinputprocessor.ProcessFailure;
 import io.github.jinputprocessor.ProcessFailure.ValidationError;
 import java.util.List;
@@ -50,7 +51,7 @@ public class ListTest {
 		}
 
 		@Test
-		void validation_fail() {
+		void validation_fail_noPath() {
 			var stringProcessor = InputProcessor.builder().forString().validateThat().isNotEmpty().then().build();
 
 			var listProcessor = InputProcessor.builder()
@@ -64,9 +65,9 @@ public class ListTest {
 			var actualFailure = result.getFailure();
 			var expectedFailure = new ProcessFailure.MultiFailure(
 				List.of(
-					(new ValidationError.StringIsEmpty()).atIndex(0),
-					(new ValidationError.StringIsEmpty()).atIndex(2),
-					(new ValidationError.StringIsEmpty()).atIndex(4)
+					(new ValidationError.StringIsEmpty()).atPath(Path.createIndexPath(0)),
+					(new ValidationError.StringIsEmpty()).atPath(Path.createIndexPath(2)),
+					(new ValidationError.StringIsEmpty()).atPath(Path.createIndexPath(4))
 				)
 			);
 			Assertions.assertThat(actualFailure).isEqualTo(expectedFailure);
@@ -81,8 +82,32 @@ public class ListTest {
 					Assertions.assertThat(e.getSuppressed()[2]).hasMessage("Invalid index 4: must not be empty");
 				});
 
+		}
+
+		@Test
+		void validation_fail_withPath() {
+			var stringProcessor = InputProcessor.builder().forString().validateThat().isNotEmpty().then().build();
+
+			var listProcessor = InputProcessor.builder()
+				.forList(String.class)
+				.processEach(stringProcessor)
+				.build();
+
+			var result = listProcessor.process("myList", List.of("", "abc", "", "123", ""));
+
+			Assertions.assertThat(result.isFailure()).isTrue();
+			var actualFailure = result.getFailure();
+			var expectedFailure = new ProcessFailure.MultiFailure(
+				List.of(
+					(new ValidationError.StringIsEmpty()).atPath(Path.createIndexPath(0)),
+					(new ValidationError.StringIsEmpty()).atPath(Path.createIndexPath(2)),
+					(new ValidationError.StringIsEmpty()).atPath(Path.createIndexPath(4))
+				)
+			).atPath(Path.createPropertyPath("myList"));
+			Assertions.assertThat(actualFailure).isEqualTo(expectedFailure);
+
 			Assertions.assertThatIllegalArgumentException()
-				.isThrownBy(() -> result.atProperty("myList").getOrThrow())
+				.isThrownBy(() -> result.getOrThrow())
 				.withMessage("Multiple failures while processing myList")
 				.satisfies(e -> {
 					Assertions.assertThat(e.getSuppressed()).hasSize(3);

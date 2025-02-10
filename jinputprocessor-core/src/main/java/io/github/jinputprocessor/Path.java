@@ -24,11 +24,18 @@ public sealed interface Path {
 		return new IndexPath(this, index);
 	}
 
+	Path atPath(Path superPath);
+
 	record RootPath() implements Path {
 
 		@Override
 		public String format() {
 			return "";
+		}
+
+		@Override
+		public Path atPath(Path superPath) {
+			return superPath;
 		}
 
 	}
@@ -40,6 +47,11 @@ public sealed interface Path {
 			return parent.format() + "." + property;
 		}
 
+		@Override
+		public Path atPath(Path superPath) {
+			return new PropertyPath(parent.atPath(superPath), property);
+		}
+
 	}
 
 	record IndexPath(Path parent, int index) implements Path {
@@ -47,6 +59,11 @@ public sealed interface Path {
 		@Override
 		public String format() {
 			return parent.format() + "[" + index + "]";
+		}
+
+		@Override
+		public Path atPath(Path superPath) {
+			return new IndexPath(parent.atPath(superPath), index);
 		}
 
 	}

@@ -137,12 +137,12 @@ public class ProcessResult<T> {
 	 * @param property
 	 * @return
 	 */
-	public ProcessResult<T> atProperty(String property) {
-		Objects.requireNonNull(property, "property cannot be null");
+	public ProcessResult<T> atPath(Path path) {
+		Objects.requireNonNull(path, "path cannot be null");
 		if (failure == null) {
 			return this;
 		}
-		return new ProcessResult<>(value, failure.atProperty(property), failureMapper);
+		return new ProcessResult<>(value, failure.atPath(path), failureMapper);
 	}
 
 	// ===========================================================================================================

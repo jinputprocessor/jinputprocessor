@@ -24,6 +24,28 @@ public interface InputProcessor<IN, OUT> {
 
 	/**
 	 * 
+	 * @param property
+	 * @param value
+	 * @return
+	 */
+	public default ProcessResult<OUT> process(@Nonnull String property, @Nullable IN value) {
+		return process(Path.atRoot().atProperty(property), value);
+	}
+
+	/**
+	 * 
+	 * @param path
+	 * @param value
+	 * @return
+	 */
+	public default ProcessResult<OUT> process(@Nonnull Path path, @Nullable IN value) {
+		return process(value).atPath(path);
+	}
+
+	// ===========================================================================================================
+
+	/**
+	 * 
 	 * @param <NEW_OUT>
 	 * @param after
 	 * @return

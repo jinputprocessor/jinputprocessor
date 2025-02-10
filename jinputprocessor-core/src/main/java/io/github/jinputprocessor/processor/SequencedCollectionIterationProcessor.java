@@ -1,6 +1,7 @@
 package io.github.jinputprocessor.processor;
 
 import io.github.jinputprocessor.InputProcessor;
+import io.github.jinputprocessor.Path;
 import io.github.jinputprocessor.ProcessFailure;
 import io.github.jinputprocessor.ProcessResult;
 import jakarta.annotation.Nonnull;
@@ -29,7 +30,7 @@ public class SequencedCollectionIterationProcessor<C_IN extends SequencedCollect
 
 		var errors = resultList.stream()
 			.filter(Result::isError)
-			.map(result -> result.error.atIndex(result.elemIndex))
+			.map(result -> result.error.atPath(Path.createIndexPath(result.elemIndex)))
 			.toList();
 		if (!errors.isEmpty()) {
 			return ProcessResult.failure(new ProcessFailure.MultiFailure(errors));
