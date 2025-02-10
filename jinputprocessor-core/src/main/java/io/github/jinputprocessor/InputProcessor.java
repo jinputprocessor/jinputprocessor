@@ -2,7 +2,6 @@ package io.github.jinputprocessor;
 
 import io.github.jinputprocessor.builder.Builder;
 import io.github.jinputprocessor.processor.ChainedProcessor;
-import io.github.jinputprocessor.result.BaseProcessorResult;
 import io.github.jinputprocessor.result.ProcessFailureMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -46,7 +45,7 @@ public interface InputProcessor<IN, OUT> {
 	// ===========================================================================================================
 
 	public static @Nonnull ProcessFailureMapper getDefaultFailureMapper() {
-		return BaseProcessorResult.getDefaultFailureMapper();
+		return ProcessResult.getDefaultFailureMapper();
 	}
 
 	/**
@@ -54,7 +53,7 @@ public interface InputProcessor<IN, OUT> {
 	 * @param defaultFailureMapper
 	 */
 	public static void setDefaultFailureMapper(@Nonnull ProcessFailureMapper defaultFailureMapper) {
-		BaseProcessorResult.setDefaultFailureMapper(defaultFailureMapper);
+		ProcessResult.setDefaultFailureMapper(defaultFailureMapper);
 	}
 
 }

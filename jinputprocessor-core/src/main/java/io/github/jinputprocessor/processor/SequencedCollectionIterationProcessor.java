@@ -3,7 +3,6 @@ package io.github.jinputprocessor.processor;
 import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.ProcessFailure;
 import io.github.jinputprocessor.ProcessResult;
-import io.github.jinputprocessor.result.BaseProcessorResult;
 import jakarta.annotation.Nonnull;
 import java.util.Objects;
 import java.util.SequencedCollection;
@@ -33,14 +32,14 @@ public class SequencedCollectionIterationProcessor<C_IN extends SequencedCollect
 			.map(result -> result.error.atIndex(result.elemIndex))
 			.toList();
 		if (!errors.isEmpty()) {
-			return BaseProcessorResult.failure(new ProcessFailure.MultiFailure(errors));
+			return ProcessResult.failure(new ProcessFailure.MultiFailure(errors));
 		}
 
 		var newCollection = resultList.stream()
 			.filter(Result::isSuccess)
 			.map(Result::value)
 			.collect(collector);
-		return BaseProcessorResult.success(newCollection);
+		return ProcessResult.success(newCollection);
 	}
 
 	private record Result<OUT>(int elemIndex, OUT value, ProcessFailure error) {

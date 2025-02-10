@@ -2,7 +2,6 @@ package io.github.jinputprocessor.processor;
 
 import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.ProcessResult;
-import io.github.jinputprocessor.result.BaseProcessorResult;
 import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
@@ -20,7 +19,7 @@ public class ChainedProcessor<IN, OUT, NEW_OUT> implements InputProcessor<IN, NE
 	public ProcessResult<NEW_OUT> process(IN value) {
 		var resultOut = firstProcessor.process(value);
 		if (resultOut.isFailure()) {
-			return BaseProcessorResult.failure(resultOut.getFailure());
+			return ProcessResult.failure(resultOut.getFailure());
 		}
 		var outValue = resultOut.get();
 		var resultNewOut = secondProcessor.process(outValue);

@@ -3,7 +3,6 @@ package io.github.jinputprocessor.processor;
 import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.ProcessFailure;
 import io.github.jinputprocessor.ProcessResult;
-import io.github.jinputprocessor.result.BaseProcessorResult;
 import jakarta.annotation.Nonnull;
 import java.util.Objects;
 import java.util.function.Function;
@@ -20,7 +19,7 @@ public class SanitizationProcessor<IN, OUT> implements InputProcessor<IN, OUT> {
 	public ProcessResult<OUT> process(IN value) {
 		try {
 			OUT newValue = sanitizationFunction.apply(value);
-			return BaseProcessorResult.success(newValue);
+			return ProcessResult.success(newValue);
 		} catch (Throwable t) {
 			return ProcessResult.failure(new ProcessFailure.UnexpectedException(value, t));
 		}

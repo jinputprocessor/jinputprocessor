@@ -4,12 +4,16 @@ public sealed interface Path {
 
 	String format();
 
+	static Path atRoot() {
+		return new RootPath();
+	}
+
 	static Path createPropertyPath(String property) {
-		return new PropertyPath(null, property);
+		return atRoot().atProperty(property);
 	}
 
 	static Path createIndexPath(int index) {
-		return new IndexPath(null, index);
+		return atRoot().atIndex(index);
 	}
 
 	default Path atProperty(String property) {
@@ -20,13 +24,20 @@ public sealed interface Path {
 		return new IndexPath(this, index);
 	}
 
+	record RootPath() implements Path {
+
+		@Override
+		public String format() {
+			return "";
+		}
+
+	}
+
 	record PropertyPath(Path parent, String property) implements Path {
 
 		@Override
 		public String format() {
-			return parent == null
-				? property
-				: parent.format() + "." + property;
+			return parent.format() + "." + property;
 		}
 
 	}
@@ -35,9 +46,7 @@ public sealed interface Path {
 
 		@Override
 		public String format() {
-			return parent == null
-				? "index " + index
-				: parent.format() + "[" + index + "]";
+			return parent.format() + "[" + index + "]";
 		}
 
 	}

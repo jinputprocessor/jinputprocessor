@@ -22,6 +22,7 @@ public class ToIllegalArgumentProcessorFailureMapper implements ProcessFailureMa
 
 	private IllegalArgumentException mapNamedFailure(String inputName, ProcessFailure.PathFailure failure) {
 		return switch (failure.path()) {
+			case Path.RootPath rootPath -> mapFailure(inputName, failure.failure());
 			case Path.PropertyPath attrPath -> mapFailure((inputName.isEmpty() ? "" : ".") + attrPath.property(), failure.failure());
 			case Path.IndexPath indexPath -> mapFailure(formatInputName(inputName, indexPath.index()), failure.failure());
 		};

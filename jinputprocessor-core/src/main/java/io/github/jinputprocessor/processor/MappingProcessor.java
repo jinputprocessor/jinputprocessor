@@ -3,7 +3,6 @@ package io.github.jinputprocessor.processor;
 import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.ProcessFailure;
 import io.github.jinputprocessor.ProcessResult;
-import io.github.jinputprocessor.result.BaseProcessorResult;
 import jakarta.annotation.Nonnull;
 import java.util.Objects;
 import java.util.function.Function;
@@ -20,7 +19,7 @@ public class MappingProcessor<OUT, NEW_OUT> implements InputProcessor<OUT, NEW_O
 	public ProcessResult<NEW_OUT> process(OUT value) {
 		try {
 			NEW_OUT outValue = mappingFunction.apply(value);
-			return BaseProcessorResult.success(outValue);
+			return ProcessResult.success(outValue);
 		} catch (Throwable t) {
 			return ProcessResult.failure(new ProcessFailure.UnexpectedException(value, t));
 		}

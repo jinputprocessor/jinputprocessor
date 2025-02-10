@@ -81,6 +81,16 @@ public class ListTest {
 					Assertions.assertThat(e.getSuppressed()[2]).hasMessage("Invalid index 4: must not be empty");
 				});
 
+			Assertions.assertThatIllegalArgumentException()
+				.isThrownBy(() -> result.atProperty("myList").getOrThrow())
+				.withMessage("Multiple failures while processing myList")
+				.satisfies(e -> {
+					Assertions.assertThat(e.getSuppressed()).hasSize(3);
+					Assertions.assertThat(e.getSuppressed()[0]).hasMessage("Invalid myList[0]: must not be empty");
+					Assertions.assertThat(e.getSuppressed()[1]).hasMessage("Invalid myList[2]: must not be empty");
+					Assertions.assertThat(e.getSuppressed()[2]).hasMessage("Invalid myList[4]: must not be empty");
+				});
+
 		}
 
 		@Test

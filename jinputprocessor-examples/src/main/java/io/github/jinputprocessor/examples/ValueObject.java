@@ -72,7 +72,7 @@ public class ValueObject {
 		}
 
 		public static LastName of(String value) {
-			return PROCESSOR.process(value).withName("lastName").getOrThrow();
+			return PROCESSOR.process(value).atProperty("lastName").getOrThrow();
 		}
 
 		@Override

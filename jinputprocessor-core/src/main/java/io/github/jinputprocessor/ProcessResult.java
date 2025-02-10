@@ -1,8 +1,10 @@
 package io.github.jinputprocessor;
 
-import io.github.jinputprocessor.result.BaseProcessorResult;
+import io.github.jinputprocessor.result.ProcessFailureMapper;
+import io.github.jinputprocessor.result.ToIllegalArgumentProcessorFailureMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * The result produced by a {@link InputProcessor}, either successful or failed.
@@ -14,59 +16,32 @@ import jakarta.annotation.Nullable;
  * 
  * @param <T>
  */
-public interface ProcessResult<T> {
+public class ProcessResult<T> {
 
-	/**
-	 * Test if this result is a success.
-	 * 
-	 * @return	<code>true</code> if this result is a success, <code>false</code> if it is a failure
-	 */
-	public boolean isSuccess();
+	// ------------------------------------------------------------------------------------------------------------
 
-	/**
-	 * Test if this result is a failure.
-	 * 
-	 * @return	<code>true</code> if this result is a failure, <code>false</code> if it is a success
-	 */
-	public boolean isFailure();
+	private static ProcessFailureMapper defaultFailureMapper = new ToIllegalArgumentProcessorFailureMapper();
 
-	/**
-	 * Get the value if process has succeed.
-	 * 
-	 * @return	The processed value
-	 * 
-	 * @throws IllegalStateException if process result is failure
-	 */
-	public @Nonnull T get();
+	@Nonnull
+	public static ProcessFailureMapper getDefaultFailureMapper() {
+		return defaultFailureMapper;
+	}
 
-	/**
-	 * Get the value if process has succeed, or throws an exception if failure.
-	 * 
-	 * @return
-	 */
-	public @Nonnull T getOrThrow();
+	public static void setDefaultFailureMapper(@Nonnull ProcessFailureMapper defaultFailureMapper) {
+		ProcessResult.defaultFailureMapper = Objects.requireNonNull(defaultFailureMapper, "defaultFailureMapper cannot be null");
+	}
 
-	/**
-	 * Get the failure if process has failed.
-	 * 
-	 * @return	The failure
-	 * 
-	 * @throws IllegalStateException if process result is success
-	 * 
-	 * @see ProcessFailure
-	 */
-	public ProcessFailure getFailure();
+	// ------------------------------------------------------------------------------------------------------------
 
-	// ===========================================================================================================
+	private final ProcessFailureMapper failureMapper;
+	private final @Nullable T value;
+	private final @Nullable ProcessFailure failure;
 
-	/**
-	 * 
-	 * @param name
-	 * @return
-	 */
-	public ProcessResult<T> withName(String name);
-
-	// ===========================================================================================================
+	private ProcessResult(@Nullable T value, @Nullable ProcessFailure failure, @Nonnull ProcessFailureMapper failureMapper) {
+		this.value = value;
+		this.failure = failure;
+		this.failureMapper = Objects.requireNonNull(failureMapper, "failureMapper cannot be null");
+	}
 
 	/**
 	 * Create a successful process result.
@@ -77,7 +52,7 @@ public interface ProcessResult<T> {
 	 * @return	A successful process result
 	 */
 	public static <OUT> ProcessResult<OUT> success(@Nullable OUT value) {
-		return BaseProcessorResult.success(value);
+		return new ProcessResult<OUT>(value, null, defaultFailureMapper);
 	}
 
 	/**
@@ -88,8 +63,115 @@ public interface ProcessResult<T> {
 	 * 
 	 * @return	A failed process result
 	 */
-	public static <OUT> ProcessResult<OUT> failure(@Nonnull ProcessFailure failuret) {
-		return BaseProcessorResult.failure(failuret);
+	public static <OUT> ProcessResult<OUT> failure(@Nonnull ProcessFailure failure) {
+		Objects.requireNonNull(failure, "failure cannot be null");
+		return new ProcessResult<>(null, failure, defaultFailureMapper);
+	}
+
+	// ------------------------------------------------------------------------------------------------------------
+
+	/**
+	 * Test if this result is a success.
+	 * 
+	 * @return	<code>true</code> if this result is a success, <code>false</code> if it is a failure
+	 */
+	public boolean isSuccess() {
+		return failure == null;
+	}
+
+	/**
+	 * Test if this result is a failure.
+	 * 
+	 * @return	<code>true</code> if this result is a failure, <code>false</code> if it is a success
+	 */
+	public boolean isFailure() {
+		return !isSuccess();
+	}
+
+	/**
+	 * Get the value if process has succeed.
+	 * 
+	 * @return	The processed value
+	 * 
+	 * @throws IllegalStateException if process result is failure
+	 */
+	public @Nonnull T get() {
+		if (isFailure()) {
+			throw new IllegalStateException("Cannot get the value as result is failure, please first test with isSuccess()/isFailure()");
+		}
+		return value;
+	}
+
+	/**
+	 * Get the value if process has succeed, or throws an exception if failure.
+	 * 
+	 * @return
+	 */
+	public @Nonnull T getOrThrow() {
+		if (isFailure()) {
+			throw failureMapper.mapFailure(failure);
+		}
+		return value;
+	}
+
+	/**
+	 * Get the failure if process has failed.
+	 * 
+	 * @return	The failure
+	 * 
+	 * @throws IllegalStateException if process result is success
+	 * 
+	 * @see ProcessFailure
+	 */
+	public ProcessFailure getFailure() {
+		if (isSuccess()) {
+			throw new IllegalStateException("Cannot get the failure as result is success, please first test with isSuccess()/isFailure()");
+		}
+		return failure;
+	}
+
+	// ===========================================================================================================
+
+	/**
+	 * 
+	 * @param property
+	 * @return
+	 */
+	public ProcessResult<T> atProperty(String property) {
+		Objects.requireNonNull(property, "property cannot be null");
+		if (failure == null) {
+			return this;
+		}
+		return new ProcessResult<>(value, failure.atProperty(property), failureMapper);
+	}
+
+	// ===========================================================================================================
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(value, failure, failureMapper);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProcessResult<?> other = (ProcessResult<?>) obj;
+		return Objects.equals(failure, other.failure)
+			&& Objects.equals(value, other.value)
+			&& Objects.equals(failureMapper, other.failureMapper);
+	}
+
+	@Override
+	public String toString() {
+		return "ProcessResult" +
+			(isSuccess()
+				? "<Success>: " + value
+				: "<Failure>: " + failure);
 	}
 
 }
