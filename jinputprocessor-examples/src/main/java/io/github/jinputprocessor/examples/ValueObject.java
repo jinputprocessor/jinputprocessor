@@ -32,7 +32,7 @@ public class ValueObject {
 	/**
 	 * A simple value object representing lastname of a user.
 	 */
-	private static class LastName {
+	static class LastName {
 
 		private static final int MAX_LENGTH = 20; // Keep low for the sake of this example. Real production code would of course allow greater value!
 
@@ -72,7 +72,7 @@ public class ValueObject {
 		}
 
 		public static LastName of(String value) {
-			return PROCESSOR.process(value).atProperty("lastName").getOrThrow();
+			return PROCESSOR.process("lastName", value).getOrThrow();
 		}
 
 		@Override
