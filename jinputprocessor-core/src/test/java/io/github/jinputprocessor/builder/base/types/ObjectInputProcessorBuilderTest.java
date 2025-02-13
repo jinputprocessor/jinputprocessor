@@ -9,17 +9,16 @@ import org.junit.jupiter.api.Test;
 
 class ObjectInputProcessorBuilderTest {
 
-	static final ObjectInputProcessorBuilder<Object, Object> BUILDER = InputProcessor.builder().forClass(Object.class);
-
 	@Nested
 	class Sanitization {
 
 		@Test
 		void when_exception_then_return_failure() {
 			var exception = new RuntimeException("any runtime exception happening :-/");
-			var processor = BUILDER.sanitize(value -> {
-				throw exception;
-			})
+			var processor = InputProcessor.builder().forClass(Object.class)
+				.sanitize(value -> {
+					throw exception;
+				})
 				.build();
 			var actualResult = processor.process(new Object());
 			ProcessResultAssert.assertThat(actualResult).isFailure()
@@ -31,7 +30,9 @@ class ObjectInputProcessorBuilderTest {
 		class DefaultIfNull {
 
 			static final Object DEFAULT_OBJECT = new Object();
-			static final InputProcessor<Object, Object> PROCESSOR = BUILDER.sanitize().defaultIfNull(DEFAULT_OBJECT).then().build();
+			static final InputProcessor<Object, Object> PROCESSOR = InputProcessor.builder().forClass(Object.class)
+				.sanitize().defaultIfNull(DEFAULT_OBJECT).then()
+				.build();
 
 			@Test
 			void when_nullInput_then_return_default() {
@@ -56,9 +57,10 @@ class ObjectInputProcessorBuilderTest {
 		@Test
 		void when_exception_then_return_failure() {
 			var exception = new RuntimeException("any runtime exception happening :-/");
-			var processor = BUILDER.validate(value -> {
-				throw exception;
-			})
+			var processor = InputProcessor.builder().forClass(Object.class)
+				.validate(value -> {
+					throw exception;
+				})
 				.build();
 			var actualResult = processor.process(new Object());
 			ProcessResultAssert.assertThat(actualResult).isFailure()
@@ -69,7 +71,9 @@ class ObjectInputProcessorBuilderTest {
 		@Nested
 		class IsNotNull {
 
-			static final InputProcessor<Object, Object> PROCESSOR = BUILDER.validateThat().isNotNull().then().build();
+			static final InputProcessor<Object, Object> PROCESSOR = InputProcessor.builder().forClass(Object.class)
+				.validateThat().isNotNull().then()
+				.build();
 
 			@Test
 			void when_null_then_failure() {
@@ -89,34 +93,42 @@ class ObjectInputProcessorBuilderTest {
 		@Nested
 		class IsInstanceOf {
 
-			static final InputProcessor<Object, Object> PROCESSOR_FOR_OBJECT = BUILDER.validateThat().isInstanceOf(Object.class).then().build();
-			static final InputProcessor<Object, Object> PROCESSOR_FOR_STRING = BUILDER.validateThat().isInstanceOf(String.class).then().build();
+			static final InputProcessor<Number, Number> PROCESSOR_FOR_NUMBER = InputProcessor.builder().forClass(Number.class)
+				.validateThat().isInstanceOf(Number.class).then()
+				.build();
+			static final InputProcessor<Number, Number> PROCESSOR_FOR_INTEGER = InputProcessor.builder().forClass(Number.class)
+				.validateThat().isInstanceOf(Integer.class).then()
+				.build();
 
 			@Test
 			void when_null_then_failure() {
-				var actual = PROCESSOR_FOR_STRING.process(null);
-				ProcessResultAssert.assertThat(actual).isFailure(new ObjectIsNotInstanceOf(String.class));
+				// null is not instance of Integer
+				var actual = PROCESSOR_FOR_INTEGER.process(null);
+				ProcessResultAssert.assertThat(actual).isFailure(new ObjectIsNotInstanceOf(Integer.class));
 			}
 
 			@Test
 			void when_sameType_then_success() {
-				final var nonNullObject = "plop";
-				var actual = PROCESSOR_FOR_STRING.process(nonNullObject);
-				ProcessResultAssert.assertThat(actual).isSuccessWithValue(nonNullObject);
+				// Integer is instance of Integer
+				final var intValue = Integer.valueOf(3);
+				var actual = PROCESSOR_FOR_INTEGER.process(intValue);
+				ProcessResultAssert.assertThat(actual).isSuccessWithValue(intValue);
 			}
 
 			@Test
 			void when_superType_then_success() {
-				final var nonNullObject = "plop";
-				var actual = PROCESSOR_FOR_OBJECT.process(nonNullObject);
-				ProcessResultAssert.assertThat(actual).isSuccessWithValue(nonNullObject);
+				// Integer is instance of Number
+				final var intValue = Integer.valueOf(3);
+				var actual = PROCESSOR_FOR_NUMBER.process(intValue);
+				ProcessResultAssert.assertThat(actual).isSuccessWithValue(intValue);
 			}
 
 			@Test
-			void when_superType_then_failure() {
-				final var nonNullObject = new Object();
-				var actual = PROCESSOR_FOR_STRING.process(nonNullObject);
-				ProcessResultAssert.assertThat(actual).isFailure(new ObjectIsNotInstanceOf(String.class));
+			void when_otherType_then_failure() {
+				// Long is not instance of Integer
+				final var longValue = Long.valueOf(3L);
+				var actual = PROCESSOR_FOR_INTEGER.process(longValue);
+				ProcessResultAssert.assertThat(actual).isFailure(new ObjectIsNotInstanceOf(Integer.class));
 			}
 
 		}
@@ -129,11 +141,14 @@ class ObjectInputProcessorBuilderTest {
 		@Test
 		void when_exception_then_return_failure() {
 			var exception = new RuntimeException("any runtime exception happening :-/");
-			var processor = BUILDER.mapTo(value -> {
-				throw exception;
-			})
+			var processor = InputProcessor.builder().forClass(Object.class)
+				.mapTo(value -> {
+					throw exception;
+				})
 				.build();
+
 			var actualResult = processor.process(new Object());
+
 			ProcessResultAssert.assertThat(actualResult).isFailure()
 				.assertThatFailure().isUnexpectedException()
 				.assertThatException().hasMessage("any runtime exception happening :-/");
@@ -142,8 +157,13 @@ class ObjectInputProcessorBuilderTest {
 		@Test
 		void when_map_then_success() {
 			final var inputValue = new Object();
-			final var outputValue = new Object();
-			var actual = BUILDER.mapTo(value -> outputValue).build().process(inputValue);
+			final var outputValue = "newOutPut";
+			var processor = InputProcessor.builder().forClass(Object.class)
+				.mapTo(value -> outputValue)
+				.build();
+
+			var actual = processor.process(inputValue);
+
 			ProcessResultAssert.assertThat(actual).isSuccessWithValue(outputValue);
 		}
 

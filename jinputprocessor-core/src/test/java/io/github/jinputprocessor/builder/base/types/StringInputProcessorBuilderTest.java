@@ -16,8 +16,6 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 
 class StringInputProcessorBuilderTest {
 
-	static final StringInputProcessorBuilder<String> BUILDER = InputProcessor.builder().forString();
-
 	@Nested
 	class Sanitization {
 
@@ -67,7 +65,9 @@ class StringInputProcessorBuilderTest {
 		@Nested
 		class IsNotNull {
 
-			private static final InputProcessor<String, String> PROCESSOR = BUILDER.validateThat().isNotNull().then().build();
+			private static final InputProcessor<String, String> PROCESSOR = InputProcessor.builder().forString()
+				.validateThat().isNotNull().then()
+				.build();
 
 			@Test
 			void when_null_then_failure() {
@@ -98,7 +98,9 @@ class StringInputProcessorBuilderTest {
 		@Nested
 		class IsMaxLength {
 
-			private static final InputProcessor<String, String> PROCESSOR = BUILDER.validateThat().isMaxLength(5).then().build();
+			private static final InputProcessor<String, String> PROCESSOR = InputProcessor.builder().forString()
+				.validateThat().isMaxLength(5).then()
+				.build();
 
 			@Test
 			void when_null_then_failure() {
@@ -129,7 +131,9 @@ class StringInputProcessorBuilderTest {
 		@Nested
 		class CanBeParsedToInteger {
 
-			private static final InputProcessor<String, String> PROCESSOR = BUILDER.validateThat().canBeParsedToInteger().then().build();
+			private static final InputProcessor<String, String> PROCESSOR = InputProcessor.builder().forString()
+				.validateThat().canBeParsedToInteger().then()
+				.build();
 
 			@Test
 			void when_null_then_failure() {
@@ -198,7 +202,7 @@ class StringInputProcessorBuilderTest {
 		@Nested
 		class MapToInteger {
 
-			static final InputProcessor<String, Integer> PROCESSOR = BUILDER.mapToInteger().build();
+			static final InputProcessor<String, Integer> PROCESSOR = InputProcessor.builder().forString().mapToInteger().build();
 
 			@Test
 			void when_null_then_failure() {
@@ -263,7 +267,7 @@ class StringInputProcessorBuilderTest {
 		@Nested
 		class MapToLong {
 
-			static final InputProcessor<String, Long> PROCESSOR = BUILDER.mapToLong().build();
+			static final InputProcessor<String, Long> PROCESSOR = InputProcessor.builder().forString().mapToLong().build();
 
 			@Test
 			void when_null_then_failure() {
