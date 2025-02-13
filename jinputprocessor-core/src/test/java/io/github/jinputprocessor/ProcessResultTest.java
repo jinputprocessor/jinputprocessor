@@ -1,6 +1,7 @@
 package io.github.jinputprocessor;
 
 import io.github.jinputprocessor.ProcessFailure.ValidationError;
+import io.github.jinputprocessor.result.InputProcessorFailureException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -108,8 +109,9 @@ class ProcessResultTest {
 
 		@Test
 		void when_failure_with_anyReason_then_exception() {
-			Assertions.assertThatIllegalArgumentException()
-				.isThrownBy(() -> FAILURE_WITH_ANY.getOrThrow());
+			Assertions.assertThatExceptionOfType(InputProcessorFailureException.class)
+				.isThrownBy(() -> FAILURE_WITH_ANY.getOrThrow())
+				.extracting(InputProcessorFailureException::getFailure).isEqualTo(ERROR);
 		}
 
 	}

@@ -4,14 +4,14 @@ import io.github.jinputprocessor.Path;
 import io.github.jinputprocessor.ProcessFailure;
 import io.github.jinputprocessor.ProcessFailure.ValidationError;
 
-public class ToIllegalArgumentProcessorFailureMapper implements ProcessFailureMapper {
+public class InputProcessorFailureExceptionMapper implements ProcessFailureMapper {
 
 	@Override
-	public IllegalArgumentException mapFailure(ProcessFailure failure) {
+	public InputProcessorFailureException mapFailure(ProcessFailure failure) {
 		return mapFailure(Path.atRoot(), failure);
 	}
 
-	public IllegalArgumentException mapFailure(Path parentPath, ProcessFailure failure) {
+	public InputProcessorFailureException mapFailure(Path parentPath, ProcessFailure failure) {
 		return switch (failure) {
 			case ProcessFailure.PathFailure namedFail -> mapPathFailure(parentPath, namedFail);
 			case ProcessFailure.MultiFailure multiFail -> mapMultiFailure(parentPath, multiFail);
@@ -20,24 +20,24 @@ public class ToIllegalArgumentProcessorFailureMapper implements ProcessFailureMa
 		};
 	}
 
-	private IllegalArgumentException mapPathFailure(Path parentPath, ProcessFailure.PathFailure failure) {
+	private InputProcessorFailureException mapPathFailure(Path parentPath, ProcessFailure.PathFailure failure) {
 		return mapFailure(failure.getPath().atPath(parentPath), failure.failure());
 	}
 
-	private IllegalArgumentException mapMultiFailure(Path path, ProcessFailure.MultiFailure failure) {
-		var exception = new IllegalArgumentException("Multiple failures while processing " + path.format());
+	private InputProcessorFailureException mapMultiFailure(Path path, ProcessFailure.MultiFailure failure) {
+		var exception = new InputProcessorFailureException("Multiple failures while processing " + path.format(), failure);
 		failure.failures().stream()
 			.map(failureItem -> mapFailure(path, failureItem))
 			.forEach(exception::addSuppressed);
 		return exception;
 	}
 
-	private IllegalArgumentException mapUnexpectedFailure(Path path, ProcessFailure.UnexpectedException failure) {
-		return new IllegalArgumentException("Unexpected exception while processing " + path.format(), failure.exception());
+	private InputProcessorFailureException mapUnexpectedFailure(Path path, ProcessFailure.UnexpectedException failure) {
+		return new InputProcessorFailureException("Unexpected exception while processing " + path.format(), failure, failure.exception());
 	}
 
-	private IllegalArgumentException mapValidationError(Path path, ValidationError validationError) {
-		return new IllegalArgumentException("Invalid " + path.format() + ": " + validationErrorToString(validationError));
+	private InputProcessorFailureException mapValidationError(Path path, ValidationError validationError) {
+		return new InputProcessorFailureException("Invalid " + path.format() + ": " + validationErrorToString(validationError), validationError);
 	}
 
 	private String validationErrorToString(ValidationError validationError) {

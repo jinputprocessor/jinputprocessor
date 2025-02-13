@@ -1,7 +1,7 @@
 package io.github.jinputprocessor;
 
 import io.github.jinputprocessor.result.ProcessFailureMapper;
-import io.github.jinputprocessor.result.ToIllegalArgumentProcessorFailureMapper;
+import io.github.jinputprocessor.result.InputProcessorFailureExceptionMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.Objects;
@@ -20,7 +20,7 @@ public class ProcessResult<T> {
 
 	// ------------------------------------------------------------------------------------------------------------
 
-	private static ProcessFailureMapper defaultFailureMapper = new ToIllegalArgumentProcessorFailureMapper();
+	private static ProcessFailureMapper defaultFailureMapper = new InputProcessorFailureExceptionMapper();
 
 	@Nonnull
 	public static ProcessFailureMapper getDefaultFailureMapper() {

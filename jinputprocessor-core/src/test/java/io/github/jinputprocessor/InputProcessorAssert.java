@@ -15,10 +15,9 @@ public class InputProcessorAssert<IN, OUT> extends AbstractAssert<InputProcessor
 		return new InputProcessorAssert<>(actual);
 	}
 
-	@SuppressWarnings({ "unchecked", "unused" })
-	public <X> ChainedProcessorAssert<IN, OUT> isChainedProcessor() {
+	public ChainedProcessorAssert<IN, OUT> isChainedProcessor() {
 		Assertions.assertThat(actual).isInstanceOf(ChainedProcessor.class);
-		return ChainedProcessorAssert.assertThat((ChainedProcessor<IN, X, OUT>) actual);
+		return ChainedProcessorAssert.assertThat((ChainedProcessor<IN, ?, OUT>) actual);
 	}
 
 }
