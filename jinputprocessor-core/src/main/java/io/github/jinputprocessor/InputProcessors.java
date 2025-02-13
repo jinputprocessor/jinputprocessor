@@ -1,6 +1,6 @@
 package io.github.jinputprocessor;
 
-import io.github.jinputprocessor.ProcessFailure.ValidationError;
+import io.github.jinputprocessor.ProcessFailure.ValidationFailure;
 import io.github.jinputprocessor.processor.MappingProcessor;
 import io.github.jinputprocessor.processor.SanitizationProcessor;
 import io.github.jinputprocessor.processor.ValidationProcessor;
@@ -45,17 +45,17 @@ public class InputProcessors {
 	/**
 	 * Creates a processor that will validate the input against the given function.
 	 * The validation function must return <code>null</code> if the input is valid,
-	 * or an appropriate {@link ValidationError} if not.
+	 * or an appropriate {@link ValidationFailure} if not.
 	 * 
 	 * @param <T>					The type of the input
 	 * 
-	 * @param validationFunction	The validation function, returns <code>null</code> if the input is valid or an appropriate {@link ValidationError} if not.
+	 * @param validationFunction	The validation function, returns <code>null</code> if the input is valid or an appropriate {@link ValidationFailure} if not.
 	 * 
 	 * @return						A processor ready to be used or combined with other processor(s)
 	 * 
 	 * @see ValidationProcessor
 	 */
-	public static <T> InputProcessor<T, T> validationProcessor(@Nonnull Function<T, ValidationError> validationFunction) {
+	public static <T> InputProcessor<T, T> validationProcessor(@Nonnull Function<T, ValidationFailure> validationFunction) {
 		return new ValidationProcessor<>(validationFunction);
 	}
 

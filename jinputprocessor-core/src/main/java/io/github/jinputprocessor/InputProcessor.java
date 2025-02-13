@@ -7,8 +7,31 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * @param <IN>
- * @param <OUT>
+ * A processor that will process an input: sanitization, validation and mapping, any number of times, in any order.
+ * 
+ * <pre>
+ * InputProcessor<String, String> processor = InputProcessor.builder().forClass(String.class)
+ *   .validate(value -> value == null ? new ValidationFailure.ObjectIsNull() : null)
+ *   .sanitize(String::strip)
+ *   .build();
+ * ProcessResult<String> result = processor.process(" some input  ");
+ * String safeValue = result.getOrThrow(); // "some input"
+ * </pre>
+ * 
+ * The same behavior can be obtained using handy pre-defined builders, discoverable using your IDE auto-completion feature.
+ * The above example can then be simplified into:
+ * <pre>
+ * InputProcessor<String, String> processor = InputProcessor.builder().forString()  // "forString()" instead of "forClass(String.class)"
+ *   .validateThat().isNotNull().then()
+ *   .sanitize().strip().then()
+ *   .build();
+ * ProcessResult<String> result = processor.process(" some input  ");
+ * String safeValue = result.getOrThrow(); // "some input"
+ * </pre>
+ * 
+ * 
+ * @param <IN>	The initial input value type
+ * @param <OUT>	The output value type, may be different than the input type if some mapping were applied
  */
 @FunctionalInterface
 public interface InputProcessor<IN, OUT> {
@@ -18,7 +41,8 @@ public interface InputProcessor<IN, OUT> {
 	 * @param input
 	 * @return
 	 */
-	public ProcessResult<OUT> process(@Nullable IN value);
+	@Nonnull
+	ProcessResult<OUT> process(@Nullable IN value);
 
 	// ===========================================================================================================
 
@@ -28,7 +52,8 @@ public interface InputProcessor<IN, OUT> {
 	 * @param value
 	 * @return
 	 */
-	public default ProcessResult<OUT> process(@Nonnull String property, @Nullable IN value) {
+	@Nonnull
+	default ProcessResult<OUT> process(@Nonnull String property, @Nullable IN value) {
 		return process(Path.root().atProperty(property), value);
 	}
 
@@ -38,7 +63,8 @@ public interface InputProcessor<IN, OUT> {
 	 * @param value
 	 * @return
 	 */
-	public default ProcessResult<OUT> process(@Nonnull Path path, @Nullable IN value) {
+	@Nonnull
+	default ProcessResult<OUT> process(@Nonnull Path path, @Nullable IN value) {
 		return process(value).atPath(path);
 	}
 
@@ -50,7 +76,8 @@ public interface InputProcessor<IN, OUT> {
 	 * @param after
 	 * @return
 	 */
-	public default <NEW_OUT> InputProcessor<IN, NEW_OUT> andThen(InputProcessor<OUT, NEW_OUT> after) {
+	@Nonnull
+	default <NEW_OUT> InputProcessor<IN, NEW_OUT> andThen(InputProcessor<OUT, NEW_OUT> after) {
 		return new ChainedProcessor<>(this, after);
 	}
 
@@ -60,13 +87,15 @@ public interface InputProcessor<IN, OUT> {
 	 * 
 	 * @return
 	 */
-	public static Builder builder() {
+	@Nonnull
+	static Builder builder() {
 		return Builder.INSTANCE;
 	}
 
 	// ===========================================================================================================
 
-	public static @Nonnull ProcessFailureMapper getDefaultFailureMapper() {
+	@Nonnull
+	static ProcessFailureMapper getDefaultFailureMapper() {
 		return ProcessResult.getDefaultFailureMapper();
 	}
 
@@ -74,7 +103,7 @@ public interface InputProcessor<IN, OUT> {
 	 * 
 	 * @param defaultFailureMapper
 	 */
-	public static void setDefaultFailureMapper(@Nonnull ProcessFailureMapper defaultFailureMapper) {
+	static void setDefaultFailureMapper(@Nonnull ProcessFailureMapper defaultFailureMapper) {
 		ProcessResult.setDefaultFailureMapper(defaultFailureMapper);
 	}
 

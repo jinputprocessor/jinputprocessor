@@ -61,7 +61,7 @@ public class ValueObject {
 				.isNotEmpty()
 				.isMaxLength(MAX_LENGTH)
 				.then()
-			.mapTo(LastName::new)
+			.map(LastName::new)
 			.build();
 		// @formatter:on
 

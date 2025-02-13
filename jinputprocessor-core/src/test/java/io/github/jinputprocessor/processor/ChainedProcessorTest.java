@@ -1,7 +1,7 @@
 package io.github.jinputprocessor.processor;
 
 import io.github.jinputprocessor.InputProcessor;
-import io.github.jinputprocessor.ProcessFailure.ValidationError;
+import io.github.jinputprocessor.ProcessFailure.ValidationFailure;
 import io.github.jinputprocessor.ProcessResult;
 import io.github.jinputprocessor.ProcessResultAssert;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -24,8 +24,8 @@ class ChainedProcessorTest {
 	@Test
 	void when_error_in_first_then_second_is_not_processed() {
 
-		var validationError = new ValidationError.ObjectIsNull();
-		InputProcessor<String, String> subProcessor1 = value -> ProcessResult.failure(validationError);
+		var validationFailure = new ValidationFailure.ObjectIsNull();
+		InputProcessor<String, String> subProcessor1 = value -> ProcessResult.failure(validationFailure);
 
 		var secondProcessIsCalled = new AtomicBoolean(false);
 		InputProcessor<String, String> subProcessor2 = value -> {
@@ -37,7 +37,7 @@ class ChainedProcessorTest {
 		var actualResult = processor.process("1");
 
 		ProcessResultAssert.assertThat(actualResult).isFailure()
-			.assertThatFailure().isEqualTo(validationError);
+			.assertThatFailure().isEqualTo(validationFailure);
 		Assertions.assertThat(secondProcessIsCalled).isFalse();
 	}
 

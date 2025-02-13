@@ -27,7 +27,7 @@ public class IntegerInputProcessorBuilder<IN> extends AbstractNumberInputProcess
 	}
 
 	public LongInputProcessorBuilder<IN> mapToLong() {
-		return mapTo(value -> value.longValue(), LongInputProcessorBuilder::new);
+		return map(value -> value.longValue(), LongInputProcessorBuilder::new);
 	}
 
 }

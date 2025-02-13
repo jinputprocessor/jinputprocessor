@@ -1,8 +1,8 @@
 package io.github.jinputprocessor.builder.base.types;
 
 import io.github.jinputprocessor.InputProcessor;
-import io.github.jinputprocessor.ProcessFailure.ValidationError;
-import io.github.jinputprocessor.ProcessFailure.ValidationError.StringIsNotParseableToInteger;
+import io.github.jinputprocessor.ProcessFailure.ValidationFailure;
+import io.github.jinputprocessor.ProcessFailure.ValidationFailure.StringIsNotParseableToInteger;
 import io.github.jinputprocessor.ProcessResultAssert;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -72,7 +72,7 @@ class StringInputProcessorBuilderTest {
 			@Test
 			void when_null_then_failure() {
 //				TODO var actual = PROCESSOR.process(null);
-//				ProcessResultAssert.assertThat(actual).isFailureWithValidationError(new ObjectIsNull());
+//				ProcessResultAssert.assertThat(actual).isFailureWithValidationFailure(new ObjectIsNull());
 			}
 
 			@Test
@@ -105,7 +105,7 @@ class StringInputProcessorBuilderTest {
 			@Test
 			void when_null_then_failure() {
 //				TODO var actual = processor.process(null);
-//				ProcessResultAssert.assertThat(actual).isFailureWithValidationError(new ObjectIsNull());
+//				ProcessResultAssert.assertThat(actual).isFailureWithValidationFailure(new ObjectIsNull());
 			}
 
 			@Test
@@ -123,7 +123,7 @@ class StringInputProcessorBuilderTest {
 			@Test
 			void when_longer_then_failure() {
 				var actual = PROCESSOR.process("123456");
-				ProcessResultAssert.assertThat(actual).isFailure(new ValidationError.StringIsTooLong(6, 5));
+				ProcessResultAssert.assertThat(actual).isFailure(new ValidationFailure.StringIsTooLong(6, 5));
 			}
 
 		}
@@ -180,7 +180,7 @@ class StringInputProcessorBuilderTest {
 			void when_beforeMinValue_then_failure() {
 				var actual = PROCESSOR.process("-21474836481"); // Integer.MIN_VALUE - 1 (64 bits)
 				ProcessResultAssert.assertThat(actual).isFailure()
-					.assertThatFailure().isValidationError()
+					.assertThatFailure().isValidationFailure()
 					.isInstanceOf(StringIsNotParseableToInteger.class);
 			}
 
@@ -188,7 +188,7 @@ class StringInputProcessorBuilderTest {
 			void when_beyondMaxValue_then_failure() {
 				var actual = PROCESSOR.process("2147483648"); // Integer.MAX_VALUE + 1 (64 bits)
 				ProcessResultAssert.assertThat(actual).isFailure()
-					.assertThatFailure().isValidationError()
+					.assertThatFailure().isValidationFailure()
 					.isInstanceOf(StringIsNotParseableToInteger.class);
 			}
 
@@ -207,7 +207,7 @@ class StringInputProcessorBuilderTest {
 			@Test
 			void when_null_then_failure() {
 //				TODO var actual = processor.process(null);
-//				ProcessResultAssert.assertThat(actual).isFailureWithValidationError(new ObjectIsNull());
+//				ProcessResultAssert.assertThat(actual).isFailureWithValidationFailure(new ObjectIsNull());
 			}
 
 			@Test
@@ -272,7 +272,7 @@ class StringInputProcessorBuilderTest {
 			@Test
 			void when_null_then_failure() {
 //				TODO var actual = processor.process(null);
-//				ProcessResultAssert.assertThat(actual).isFailureWithValidationError(new ObjectIsNull());
+//				ProcessResultAssert.assertThat(actual).isFailureWithValidationFailure(new ObjectIsNull());
 			}
 
 			@Test

@@ -1,8 +1,8 @@
 package io.github.jinputprocessor.builder.base.types;
 
 import io.github.jinputprocessor.InputProcessor;
-import io.github.jinputprocessor.ProcessFailure.ValidationError.ObjectIsNotInstanceOf;
-import io.github.jinputprocessor.ProcessFailure.ValidationError.ObjectIsNull;
+import io.github.jinputprocessor.ProcessFailure.ValidationFailure.ObjectIsNotInstanceOf;
+import io.github.jinputprocessor.ProcessFailure.ValidationFailure.ObjectIsNull;
 import io.github.jinputprocessor.ProcessResultAssert;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -142,7 +142,7 @@ class ObjectInputProcessorBuilderTest {
 		void when_exception_then_return_failure() {
 			var exception = new RuntimeException("any runtime exception happening :-/");
 			var processor = InputProcessor.builder().forClass(Object.class)
-				.mapTo(value -> {
+				.map(value -> {
 					throw exception;
 				})
 				.build();
@@ -159,7 +159,7 @@ class ObjectInputProcessorBuilderTest {
 			final var inputValue = new Object();
 			final var outputValue = "newOutPut";
 			var processor = InputProcessor.builder().forClass(Object.class)
-				.mapTo(value -> outputValue)
+				.map(value -> outputValue)
 				.build();
 
 			var actual = processor.process(inputValue);

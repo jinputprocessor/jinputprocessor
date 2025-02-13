@@ -62,58 +62,58 @@ public sealed interface ProcessFailure {
 	}
 
 	/**
-	 * A failure representing a validation error. 
-	 * It is again a sealed interface, allowing switch pattern matching for a complete error handling.
+	 * A failure because of a validation issue. 
+	 * It is again a sealed interface, allowing switch pattern matching for a complete failure handling.
 	 * 
 	 * @see ValidationProcessor
 	 */
-	sealed interface ValidationError extends ProcessFailure {
+	sealed interface ValidationFailure extends ProcessFailure {
 
 		// ===========================================================================
 		// CUSTOM
 
 		/**
-		 * Extend this interface to declare your own custom validation errors.
-		 * See documentation and examples for more.
+		 * Extend this interface to declare your own custom validation failures.
+		 * See online documentation and examples for more.
 		 */
-		non-sealed interface CustomValidationError extends ValidationError {
+		non-sealed interface CustomValidationFailure extends ValidationFailure {
 
 		}
 
 		// ===========================================================================
 		// OBJECT
 
-		record ObjectIsNull() implements ValidationError {
+		record ObjectIsNull() implements ValidationFailure {
 		}
 
-		record ObjectIsNotInstanceOf(Class<?> clazz) implements ValidationError {
+		record ObjectIsNotInstanceOf(Class<?> clazz) implements ValidationFailure {
 		}
 
 		// ===========================================================================
 		// STRING
 
-		record StringIsEmpty() implements ValidationError {
+		record StringIsEmpty() implements ValidationFailure {
 		}
 
-		record StringIsTooLong(int currentLength, int maxLength) implements ValidationError {
+		record StringIsTooLong(int currentLength, int maxLength) implements ValidationFailure {
 		}
 
-		record StringIsNotParseableToInteger() implements ValidationError {
+		record StringIsNotParseableToInteger() implements ValidationFailure {
 		}
 
 		// ===========================================================================
 		// NUMBER
 
-		record NumberIsNotGreaterThan<T extends Number>(T ref) implements ValidationError {
+		record NumberIsNotGreaterThan<T extends Number>(T ref) implements ValidationFailure {
 		}
 
-		record NumberIsNotGreaterOrEqualTo<T extends Number>(T ref) implements ValidationError {
+		record NumberIsNotGreaterOrEqualTo<T extends Number>(T ref) implements ValidationFailure {
 		}
 
 		// ===========================================================================
 		// COLLECTION
 
-		record CollectionIsEmpty() implements ValidationError {
+		record CollectionIsEmpty() implements ValidationFailure {
 
 		}
 

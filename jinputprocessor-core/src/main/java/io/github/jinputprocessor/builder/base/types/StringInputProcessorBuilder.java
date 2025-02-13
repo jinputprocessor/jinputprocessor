@@ -30,11 +30,11 @@ public class StringInputProcessorBuilder<IN> extends AbstractInputProcessorBuild
 	}
 
 	public IntegerInputProcessorBuilder<IN> mapToInteger() {
-		return mapTo(Integer::parseInt, IntegerInputProcessorBuilder::new);
+		return map(Integer::parseInt, IntegerInputProcessorBuilder::new);
 	}
 
 	public LongInputProcessorBuilder<IN> mapToLong() {
-		return mapTo(Long::parseLong, LongInputProcessorBuilder::new);
+		return map(Long::parseLong, LongInputProcessorBuilder::new);
 	}
 
 }

@@ -28,12 +28,12 @@ public class SequencedCollectionIterationProcessor<C_IN extends SequencedCollect
 			.mapToObj(index -> processElement(index, iter.next()))
 			.toList();
 
-		var errors = resultList.stream()
-			.filter(Result::isError)
-			.map(result -> result.error.atPath(Path.createIndexPath(result.elemIndex)))
+		var failures = resultList.stream()
+			.filter(Result::isFailure)
+			.map(result -> result.failure.atPath(Path.createIndexPath(result.elemIndex)))
 			.toList();
-		if (!errors.isEmpty()) {
-			return ProcessResult.failure(new ProcessFailure.MultiFailure(errors));
+		if (!failures.isEmpty()) {
+			return ProcessResult.failure(new ProcessFailure.MultiFailure(failures));
 		}
 
 		var newCollection = resultList.stream()
@@ -43,14 +43,14 @@ public class SequencedCollectionIterationProcessor<C_IN extends SequencedCollect
 		return ProcessResult.success(newCollection);
 	}
 
-	private record Result<OUT>(int elemIndex, OUT value, ProcessFailure error) {
+	private record Result<OUT>(int elemIndex, OUT value, ProcessFailure failure) {
 
 		public boolean isSuccess() {
-			return error == null;
+			return failure == null;
 		}
 
-		public boolean isError() {
-			return error != null;
+		public boolean isFailure() {
+			return failure != null;
 		}
 
 	}

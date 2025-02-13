@@ -2,7 +2,7 @@ package io.github.jinputprocessor.result;
 
 import io.github.jinputprocessor.Path;
 import io.github.jinputprocessor.ProcessFailure;
-import io.github.jinputprocessor.ProcessFailure.ValidationError;
+import io.github.jinputprocessor.ProcessFailure.ValidationFailure;
 
 public class InputProcessorFailureExceptionMapper implements ProcessFailureMapper {
 
@@ -16,7 +16,7 @@ public class InputProcessorFailureExceptionMapper implements ProcessFailureMappe
 			case ProcessFailure.PathFailure namedFail -> mapPathFailure(parentPath, namedFail);
 			case ProcessFailure.MultiFailure multiFail -> mapMultiFailure(parentPath, multiFail);
 			case ProcessFailure.UnexpectedException unexpFail -> mapUnexpectedFailure(parentPath, unexpFail);
-			case ProcessFailure.ValidationError validationError -> mapValidationError(parentPath, validationError);
+			case ProcessFailure.ValidationFailure validationFail -> mapValidationFailure(parentPath, validationFail);
 		};
 	}
 
@@ -36,25 +36,25 @@ public class InputProcessorFailureExceptionMapper implements ProcessFailureMappe
 		return new InputProcessorFailureException("Unexpected exception while processing " + path.format(), failure, failure.exception());
 	}
 
-	private InputProcessorFailureException mapValidationError(Path path, ValidationError validationError) {
-		return new InputProcessorFailureException("Invalid " + path.format() + ": " + validationErrorToString(validationError), validationError);
+	private InputProcessorFailureException mapValidationFailure(Path path, ValidationFailure validationFail) {
+		return new InputProcessorFailureException("Invalid " + path.format() + ": " + validationFailureToString(validationFail), validationFail);
 	}
 
-	private String validationErrorToString(ValidationError validationError) {
-		return switch (validationError) {
-			case ValidationError.ObjectIsNull err -> "must not be null";
-			case ValidationError.ObjectIsNotInstanceOf err -> "is not an instance of " + err.clazz();
+	private String validationFailureToString(ValidationFailure validationFail) {
+		return switch (validationFail) {
+			case ValidationFailure.ObjectIsNull err -> "must not be null";
+			case ValidationFailure.ObjectIsNotInstanceOf err -> "is not an instance of " + err.clazz();
 
-			case ValidationError.StringIsEmpty err -> "must not be empty";
-			case ValidationError.StringIsTooLong err -> "must be " + err.maxLength() + " chars max, but is " + err.currentLength();
-			case ValidationError.StringIsNotParseableToInteger err -> "is not parseable to Integer";
+			case ValidationFailure.StringIsEmpty err -> "must not be empty";
+			case ValidationFailure.StringIsTooLong err -> "must be " + err.maxLength() + " chars max, but is " + err.currentLength();
+			case ValidationFailure.StringIsNotParseableToInteger err -> "is not parseable to Integer";
 
-			case ValidationError.NumberIsNotGreaterThan<?> err -> "must be greater than " + err.ref();
-			case ValidationError.NumberIsNotGreaterOrEqualTo<?> err -> "must be greater or equal to " + err.ref();
+			case ValidationFailure.NumberIsNotGreaterThan<?> err -> "must be greater than " + err.ref();
+			case ValidationFailure.NumberIsNotGreaterOrEqualTo<?> err -> "must be greater or equal to " + err.ref();
 
-			case ValidationError.CollectionIsEmpty err -> "collection is empty";
+			case ValidationFailure.CollectionIsEmpty err -> "collection is empty";
 
-			case ValidationError.CustomValidationError err -> err.toString();
+			case ValidationFailure.CustomValidationFailure err -> err.toString();
 		};
 	}
 

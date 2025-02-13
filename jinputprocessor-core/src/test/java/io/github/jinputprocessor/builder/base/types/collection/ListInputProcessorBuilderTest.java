@@ -3,7 +3,7 @@ package io.github.jinputprocessor.builder.base.types.collection;
 import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.Path;
 import io.github.jinputprocessor.ProcessFailure;
-import io.github.jinputprocessor.ProcessFailure.ValidationError;
+import io.github.jinputprocessor.ProcessFailure.ValidationFailure;
 import io.github.jinputprocessor.ProcessResultAssert;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,7 +37,7 @@ class ListInputProcessorBuilderTest {
 		@Test
 		void nominal_success() {
 			var listProcessor = InputProcessor.builder().forList(String.class)
-				.validate(list -> list.isEmpty() ? new ValidationError.CollectionIsEmpty() : null)
+				.validate(list -> list.isEmpty() ? new ValidationFailure.CollectionIsEmpty() : null)
 				.build();
 
 			var actualResult = listProcessor.process(List.of("a"));
@@ -52,13 +52,13 @@ class ListInputProcessorBuilderTest {
 		@Test
 		void nominal_failure() {
 			var listProcessor = InputProcessor.builder().forList(String.class)
-				.validate(list -> list.isEmpty() ? new ValidationError.CollectionIsEmpty() : null)
+				.validate(list -> list.isEmpty() ? new ValidationFailure.CollectionIsEmpty() : null)
 				.build();
 
 			var actualResult = listProcessor.process(List.of());
 
 			ProcessResultAssert.assertThat(actualResult)
-				.isFailure(new ValidationError.CollectionIsEmpty());
+				.isFailure(new ValidationFailure.CollectionIsEmpty());
 		}
 
 	}
@@ -69,7 +69,7 @@ class ListInputProcessorBuilderTest {
 		@Test
 		void nominal() {
 			var listProcessor = InputProcessor.builder().forList(String.class)
-				.mapTo(list -> list.stream().map(Integer::parseInt).toList())
+				.map(list -> list.stream().map(Integer::parseInt).toList())
 				.build();
 
 			var actualResult = listProcessor.process(List.of("0", "1", "2"));
@@ -153,9 +153,9 @@ class ListInputProcessorBuilderTest {
 
 				var expectedFailure = new ProcessFailure.MultiFailure(
 					List.of(
-						(new ValidationError.StringIsEmpty()).atPath(Path.createIndexPath(0)),
-						(new ValidationError.StringIsEmpty()).atPath(Path.createIndexPath(2)),
-						(new ValidationError.StringIsEmpty()).atPath(Path.createIndexPath(4))
+						(new ValidationFailure.StringIsEmpty()).atPath(Path.createIndexPath(0)),
+						(new ValidationFailure.StringIsEmpty()).atPath(Path.createIndexPath(2)),
+						(new ValidationFailure.StringIsEmpty()).atPath(Path.createIndexPath(4))
 					)
 				);
 				ProcessResultAssert.assertThat(actualResult)
@@ -173,9 +173,9 @@ class ListInputProcessorBuilderTest {
 
 				var expectedFailure = new ProcessFailure.MultiFailure(
 					List.of(
-						(new ValidationError.StringIsEmpty()).atPath(Path.createIndexPath(0)),
-						(new ValidationError.StringIsEmpty()).atPath(Path.createIndexPath(2)),
-						(new ValidationError.StringIsEmpty()).atPath(Path.createIndexPath(4))
+						(new ValidationFailure.StringIsEmpty()).atPath(Path.createIndexPath(0)),
+						(new ValidationFailure.StringIsEmpty()).atPath(Path.createIndexPath(2)),
+						(new ValidationFailure.StringIsEmpty()).atPath(Path.createIndexPath(4))
 					)
 				).atPath(Path.createPropertyPath("myList"));
 				ProcessResultAssert.assertThat(actualResult)

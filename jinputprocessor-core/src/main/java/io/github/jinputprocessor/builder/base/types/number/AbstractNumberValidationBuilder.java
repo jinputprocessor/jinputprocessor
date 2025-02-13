@@ -1,6 +1,6 @@
 package io.github.jinputprocessor.builder.base.types.number;
 
-import io.github.jinputprocessor.ProcessFailure.ValidationError;
+import io.github.jinputprocessor.ProcessFailure.ValidationFailure;
 import io.github.jinputprocessor.builder.InputProcessorBuilder;
 import io.github.jinputprocessor.builder.base.AbstractValidationBuilder;
 
@@ -44,7 +44,7 @@ public abstract class AbstractNumberValidationBuilder<IN, T extends Number, B ex
 	public SELF isGreaterThan(T ref) {
 		builder = builder.validate(
 			value -> !isGreaterThan(value, ref)
-				? new ValidationError.NumberIsNotGreaterThan<>(ref)
+				? new ValidationFailure.NumberIsNotGreaterThan<>(ref)
 				: null
 		);
 		return cast();
@@ -53,7 +53,7 @@ public abstract class AbstractNumberValidationBuilder<IN, T extends Number, B ex
 	public SELF isGreaterOrEqualTo(T ref) {
 		builder = builder.validate(
 			value -> !isGreaterOrEqualTo(value, ref)
-				? new ValidationError.NumberIsNotGreaterOrEqualTo<>(ref)
+				? new ValidationFailure.NumberIsNotGreaterOrEqualTo<>(ref)
 				: null
 		);
 		return cast();

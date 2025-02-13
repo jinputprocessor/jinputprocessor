@@ -1,6 +1,6 @@
 package io.github.jinputprocessor.builder.base;
 
-import io.github.jinputprocessor.ProcessFailure.ValidationError;
+import io.github.jinputprocessor.ProcessFailure.ValidationFailure;
 import io.github.jinputprocessor.builder.InputProcessorBuilder;
 
 public abstract class AbstractValidationBuilder<IN, T, B extends InputProcessorBuilder<IN, T, B>, SELF extends AbstractValidationBuilder<IN, T, B, SELF>>
@@ -13,7 +13,7 @@ public abstract class AbstractValidationBuilder<IN, T, B extends InputProcessorB
 	public final SELF isNotNull() {
 		builder = builder.validate(
 			value -> value == null
-				? new ValidationError.ObjectIsNull()
+				? new ValidationFailure.ObjectIsNull()
 				: null
 		);
 		return cast();
@@ -22,7 +22,7 @@ public abstract class AbstractValidationBuilder<IN, T, B extends InputProcessorB
 	public final <U extends T> SELF isInstanceOf(Class<U> clazz) {
 		builder = builder.validate(
 			value -> !clazz.isInstance(value)
-				? new ValidationError.ObjectIsNotInstanceOf(clazz)
+				? new ValidationFailure.ObjectIsNotInstanceOf(clazz)
 				: null
 		);
 		return cast();

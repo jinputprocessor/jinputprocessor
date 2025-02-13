@@ -1,6 +1,6 @@
 package io.github.jinputprocessor;
 
-import io.github.jinputprocessor.ProcessFailure.ValidationError;
+import io.github.jinputprocessor.ProcessFailure.ValidationFailure;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -22,8 +22,8 @@ class InputProcessorTest {
 
 		@Test
 		void nominal_error() {
-			var validationError = new ValidationError.ObjectIsNull();
-			ProcessResult<String> expectedResult = ProcessResult.failure(validationError);
+			var validationFailure = new ValidationFailure.ObjectIsNull();
+			ProcessResult<String> expectedResult = ProcessResult.failure(validationFailure);
 			InputProcessor<String, String> processStr = value -> expectedResult;
 
 			var actualResult = processStr.process("test");
@@ -43,7 +43,7 @@ class InputProcessorTest {
 				try {
 					InputProcessor.setDefaultFailureMapper(failure -> new NullPointerException("NPE!"));
 					var processor = InputProcessor.builder().forString()
-						.validate(value -> new ValidationError.ObjectIsNull())
+						.validate(value -> new ValidationFailure.ObjectIsNull())
 						.build();
 
 					Assertions.assertThatNullPointerException()

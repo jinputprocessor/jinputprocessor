@@ -1,7 +1,7 @@
 package io.github.jinputprocessor;
 
 import io.github.jinputprocessor.ProcessFailure.UnexpectedException;
-import io.github.jinputprocessor.ProcessFailure.ValidationError;
+import io.github.jinputprocessor.ProcessFailure.ValidationFailure;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.assertj.core.api.Assertions;
@@ -23,11 +23,11 @@ public class ProcessFailureAssert extends AbstractAssert<ProcessFailureAssert, P
 		return Assertions.fail("Failure expected to be " + UnexpectedException.class + ", but is " + actual.getClass() + ":\n" + actual);
 	}
 
-	public ValidationErrorAssert isValidationError() {
-		if (actual instanceof ValidationError err) {
-			return ValidationErrorAssert.assertThat(err);
+	public ValidationFailureAssert isValidationFailure() {
+		if (actual instanceof ValidationFailure fail) {
+			return ValidationFailureAssert.assertThat(fail);
 		}
-		return Assertions.fail("Failure expected to be " + ValidationError.class + ", but is " + actual.getClass() + ":\n" + actual);
+		return Assertions.fail("Failure expected to be " + ValidationFailure.class + ", but is " + actual.getClass() + ":\n" + actual);
 	}
 
 	/**
@@ -61,14 +61,14 @@ public class ProcessFailureAssert extends AbstractAssert<ProcessFailureAssert, P
 	 * 
 	 *
 	 */
-	public static class ValidationErrorAssert extends AbstractAssert<ValidationErrorAssert, ValidationError> {
+	public static class ValidationFailureAssert extends AbstractAssert<ValidationFailureAssert, ValidationFailure> {
 
-		private ValidationErrorAssert(ValidationError actual) {
-			super(actual, ValidationErrorAssert.class);
+		private ValidationFailureAssert(ValidationFailure actual) {
+			super(actual, ValidationFailureAssert.class);
 		}
 
-		public static ValidationErrorAssert assertThat(ValidationError actual) {
-			return new ValidationErrorAssert(actual);
+		public static ValidationFailureAssert assertThat(ValidationFailure actual) {
+			return new ValidationFailureAssert(actual);
 		}
 
 	}

@@ -24,12 +24,12 @@ public class CollectionIterationProcessor<C_IN extends Collection<T>, T, C_OUT e
 			.map(elementProcessor::process)
 			.toList();
 
-		var errors = resultList.stream()
+		var failures = resultList.stream()
 			.filter(ProcessResult::isFailure)
 			.map(ProcessResult::getFailure)
 			.toList();
-		if (!errors.isEmpty()) {
-			return ProcessResult.failure(new ProcessFailure.MultiFailure(errors));
+		if (!failures.isEmpty()) {
+			return ProcessResult.failure(new ProcessFailure.MultiFailure(failures));
 		}
 
 		var newCollection = resultList.stream()

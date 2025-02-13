@@ -1,6 +1,6 @@
 package io.github.jinputprocessor;
 
-import io.github.jinputprocessor.ProcessFailure.ValidationError;
+import io.github.jinputprocessor.ProcessFailure.ValidationFailure;
 import io.github.jinputprocessor.result.InputProcessorFailureException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -12,7 +12,7 @@ class ProcessResultTest {
 	private static final Object OBJECT = new Object();
 	private static final ProcessResult<Object> SUCCESS_WITH_ANY = ProcessResult.success(OBJECT);
 
-	private static final ProcessFailure ERROR = new ValidationError.ObjectIsNull();
+	private static final ProcessFailure ERROR = new ValidationFailure.ObjectIsNull();
 	private static final ProcessResult<Object> FAILURE_WITH_ANY = ProcessResult.failure(ERROR);
 
 	@Nested
@@ -26,7 +26,7 @@ class ProcessResultTest {
 
 		@Test
 		void failure() {
-			var error = new ValidationError.ObjectIsNull();
+			var error = new ValidationFailure.ObjectIsNull();
 			ProcessResultAssert.assertThat(ProcessResult.failure(error))
 				.isFailure(error);
 		}
@@ -223,7 +223,7 @@ class ProcessResultTest {
 
 		@Test
 		void when_notSameFailure_then_false() {
-			var otherDifferent = ProcessResult.failure(new ValidationError.StringIsEmpty());
+			var otherDifferent = ProcessResult.failure(new ValidationFailure.StringIsEmpty());
 			Assertions.assertThat(FAILURE_WITH_ANY).isNotEqualTo(otherDifferent);
 		}
 

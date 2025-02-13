@@ -3,7 +3,7 @@ package io.github.jinputprocessor.builder.base.types.collection;
 import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.Path;
 import io.github.jinputprocessor.ProcessFailure;
-import io.github.jinputprocessor.ProcessFailure.ValidationError;
+import io.github.jinputprocessor.ProcessFailure.ValidationFailure;
 import io.github.jinputprocessor.ProcessResultAssert;
 import java.util.HashSet;
 import java.util.List;
@@ -38,7 +38,7 @@ class SetInputProcessorBuilderTest {
 		@Test
 		void nominal_success() {
 			var setProcessor = InputProcessor.builder().forSet(String.class)
-				.validate(set -> set.isEmpty() ? new ValidationError.CollectionIsEmpty() : null)
+				.validate(set -> set.isEmpty() ? new ValidationFailure.CollectionIsEmpty() : null)
 				.build();
 
 			var actualResult = setProcessor.process(Set.of("a"));
@@ -50,13 +50,13 @@ class SetInputProcessorBuilderTest {
 		@Test
 		void nominal_failure() {
 			var setProcessor = InputProcessor.builder().forSet(String.class)
-				.validate(set -> set.isEmpty() ? new ValidationError.CollectionIsEmpty() : null)
+				.validate(set -> set.isEmpty() ? new ValidationFailure.CollectionIsEmpty() : null)
 				.build();
 
 			var actualResult = setProcessor.process(Set.of());
 
 			ProcessResultAssert.assertThat(actualResult)
-				.isFailure(new ValidationError.CollectionIsEmpty());
+				.isFailure(new ValidationFailure.CollectionIsEmpty());
 		}
 
 	}
@@ -67,7 +67,7 @@ class SetInputProcessorBuilderTest {
 		@Test
 		void nominal() {
 			var setProcessor = InputProcessor.builder().forSet(String.class)
-				.mapTo(set -> set.stream().map(Integer::parseInt).collect(Collectors.toSet()))
+				.map(set -> set.stream().map(Integer::parseInt).collect(Collectors.toSet()))
 				.build();
 
 			var actualResult = setProcessor.process(Set.of("0", "1", "2"));
@@ -142,7 +142,7 @@ class SetInputProcessorBuilderTest {
 
 				var expectedFailure = new ProcessFailure.MultiFailure(
 					List.of(
-						new ValidationError.StringIsEmpty()
+						new ValidationFailure.StringIsEmpty()
 					)
 				);
 				ProcessResultAssert.assertThat(actualResult)
@@ -160,7 +160,7 @@ class SetInputProcessorBuilderTest {
 
 				var expectedFailure = new ProcessFailure.MultiFailure(
 					List.of(
-						new ValidationError.StringIsEmpty()
+						new ValidationFailure.StringIsEmpty()
 					)
 				).atPath(Path.createPropertyPath("mySet"));
 				ProcessResultAssert.assertThat(actualResult)
