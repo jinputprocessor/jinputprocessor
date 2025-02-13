@@ -16,16 +16,16 @@ public sealed interface Path {
 	 * 
 	 * @return
 	 */
-	static Path atRoot() {
+	static Path root() {
 		return new RootPath();
 	}
 
 	static Path createPropertyPath(String property) {
-		return new PropertyPath(atRoot(), property);
+		return new PropertyPath(root(), property);
 	}
 
 	static Path createIndexPath(int index) {
-		return new IndexPath(atRoot(), index);
+		return new IndexPath(root(), index);
 	}
 
 	default Path atProperty(String property) {

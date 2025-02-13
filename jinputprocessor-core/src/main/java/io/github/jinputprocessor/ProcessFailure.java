@@ -15,7 +15,7 @@ public sealed interface ProcessFailure {
 	}
 
 	default Path getPath() {
-		return Path.atRoot();
+		return Path.root();
 	}
 
 	/**

@@ -29,7 +29,7 @@ public interface InputProcessor<IN, OUT> {
 	 * @return
 	 */
 	public default ProcessResult<OUT> process(@Nonnull String property, @Nullable IN value) {
-		return process(Path.atRoot().atProperty(property), value);
+		return process(Path.root().atProperty(property), value);
 	}
 
 	/**

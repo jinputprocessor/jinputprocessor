@@ -14,7 +14,7 @@ class PathTest {
 
 		@Test
 		void instances() {
-			Assertions.assertThat(Path.atRoot())
+			Assertions.assertThat(Path.root())
 				.isInstanceOf(RootPath.class);
 			Assertions.assertThat(Path.createPropertyPath("plop"))
 				.isInstanceOf(PropertyPath.class);
@@ -27,7 +27,7 @@ class PathTest {
 	@Nested
 	class RootPathTest {
 
-		private static final Path ROOT_PATH = Path.atRoot();
+		private static final Path ROOT_PATH = Path.root();
 
 		@Test
 		void staticFactory() {
@@ -42,7 +42,7 @@ class PathTest {
 
 		@Test
 		void when_atPath_with_anyRootPath_return_anyPath() {
-			var anyPath = Path.atRoot();
+			var anyPath = Path.root();
 			Assertions.assertThat(ROOT_PATH.atPath(anyPath)).isSameAs(anyPath);
 		}
 
@@ -86,7 +86,7 @@ class PathTest {
 		@Test
 		void nullProperty_forbidden() {
 			Assertions.assertThatNullPointerException()
-				.isThrownBy(() -> new PropertyPath(Path.atRoot(), null))
+				.isThrownBy(() -> new PropertyPath(Path.root(), null))
 				.withMessage("property path cannot be null");
 		}
 
@@ -129,7 +129,7 @@ class PathTest {
 		@Test
 		void negativeIndex_forbidden() {
 			Assertions.assertThatIllegalArgumentException()
-				.isThrownBy(() -> new IndexPath(Path.atRoot(), -1))
+				.isThrownBy(() -> new IndexPath(Path.root(), -1))
 				.withMessage("index path cannot be negative: -1");
 		}
 

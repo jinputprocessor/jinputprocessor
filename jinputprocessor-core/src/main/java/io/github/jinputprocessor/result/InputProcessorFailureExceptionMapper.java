@@ -8,7 +8,7 @@ public class InputProcessorFailureExceptionMapper implements ProcessFailureMappe
 
 	@Override
 	public InputProcessorFailureException mapFailure(ProcessFailure failure) {
-		return mapFailure(Path.atRoot(), failure);
+		return mapFailure(Path.root(), failure);
 	}
 
 	public InputProcessorFailureException mapFailure(Path parentPath, ProcessFailure failure) {
