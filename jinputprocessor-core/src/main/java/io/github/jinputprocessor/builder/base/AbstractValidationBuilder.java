@@ -19,4 +19,13 @@ public abstract class AbstractValidationBuilder<IN, T, B extends InputProcessorB
 		return cast();
 	}
 
+	public final <U extends T> SELF isInstanceOf(Class<U> clazz) {
+		builder = builder.validate(
+			value -> !clazz.isInstance(value)
+				? new ValidationError.ObjectIsNotInstanceOf(clazz)
+				: null
+		);
+		return cast();
+	}
+
 }

@@ -86,6 +86,9 @@ public sealed interface ProcessFailure {
 		record ObjectIsNull() implements ValidationError {
 		}
 
+		record ObjectIsNotInstanceOf(Class<?> clazz) implements ValidationError {
+		}
+
 		// ===========================================================================
 		// STRING
 

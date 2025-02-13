@@ -1,6 +1,7 @@
 package io.github.jinputprocessor.builder.base.types;
 
 import io.github.jinputprocessor.InputProcessor;
+import io.github.jinputprocessor.ProcessFailure.ValidationError.ObjectIsNotInstanceOf;
 import io.github.jinputprocessor.ProcessFailure.ValidationError.ObjectIsNull;
 import io.github.jinputprocessor.ProcessResultAssert;
 import org.junit.jupiter.api.Nested;
@@ -81,6 +82,41 @@ class ObjectInputProcessorBuilderTest {
 				final var nonNullObject = new Object();
 				var actual = PROCESSOR.process(nonNullObject);
 				ProcessResultAssert.assertThat(actual).isSuccessWithValue(nonNullObject);
+			}
+
+		}
+
+		@Nested
+		class IsInstanceOf {
+
+			static final InputProcessor<Object, Object> PROCESSOR_FOR_OBJECT = BUILDER.validateThat().isInstanceOf(Object.class).then().build();
+			static final InputProcessor<Object, Object> PROCESSOR_FOR_STRING = BUILDER.validateThat().isInstanceOf(String.class).then().build();
+
+			@Test
+			void when_null_then_failure() {
+				var actual = PROCESSOR_FOR_STRING.process(null);
+				ProcessResultAssert.assertThat(actual).isFailure(new ObjectIsNotInstanceOf(String.class));
+			}
+
+			@Test
+			void when_sameType_then_success() {
+				final var nonNullObject = "plop";
+				var actual = PROCESSOR_FOR_STRING.process(nonNullObject);
+				ProcessResultAssert.assertThat(actual).isSuccessWithValue(nonNullObject);
+			}
+
+			@Test
+			void when_superType_then_success() {
+				final var nonNullObject = "plop";
+				var actual = PROCESSOR_FOR_OBJECT.process(nonNullObject);
+				ProcessResultAssert.assertThat(actual).isSuccessWithValue(nonNullObject);
+			}
+
+			@Test
+			void when_superType_then_failure() {
+				final var nonNullObject = new Object();
+				var actual = PROCESSOR_FOR_STRING.process(nonNullObject);
+				ProcessResultAssert.assertThat(actual).isFailure(new ObjectIsNotInstanceOf(String.class));
 			}
 
 		}

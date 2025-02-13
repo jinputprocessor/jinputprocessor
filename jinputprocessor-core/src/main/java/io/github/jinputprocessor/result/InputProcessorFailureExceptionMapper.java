@@ -43,6 +43,7 @@ public class InputProcessorFailureExceptionMapper implements ProcessFailureMappe
 	private String validationErrorToString(ValidationError validationError) {
 		return switch (validationError) {
 			case ValidationError.ObjectIsNull err -> "must not be null";
+			case ValidationError.ObjectIsNotInstanceOf err -> "is not an instance of " + err.clazz();
 
 			case ValidationError.StringIsEmpty err -> "must not be empty";
 			case ValidationError.StringIsTooLong err -> "must be " + err.maxLength() + " chars max, but is " + err.currentLength();
