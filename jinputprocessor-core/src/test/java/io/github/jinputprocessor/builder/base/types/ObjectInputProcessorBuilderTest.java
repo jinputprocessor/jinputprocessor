@@ -4,10 +4,56 @@ import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.ProcessFailure.ValidationFailure.ObjectIsNotInstanceOf;
 import io.github.jinputprocessor.ProcessFailure.ValidationFailure.ObjectIsNull;
 import io.github.jinputprocessor.ProcessResultAssert;
+import io.github.jinputprocessor.builder.NullStrategy;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class ObjectInputProcessorBuilderTest {
+
+	@Nested
+	class NullStrategyTest {
+
+		@Test
+		void when_no_nullStrategy_then_return_failure() {
+			var processor = InputProcessor.builder().forString()
+				// no null strategy
+				.sanitize(String::strip)
+				.build();
+
+			var actualResult = processor.process(null);
+
+			ProcessResultAssert.assertThat(actualResult).isFailure()
+				.assertThatFailure().isUnexpectedException()
+				.assertThatException().isInstanceOf(NullPointerException.class);
+		}
+
+		@Test
+		void when_process_nullStrategy_then_return_failure() {
+			var processor = InputProcessor.builder().forString()
+				.nullStrategy(NullStrategy.PROCESS)
+				.sanitize(String::strip)
+				.build();
+
+			var actualResult = processor.process(null);
+
+			ProcessResultAssert.assertThat(actualResult).isFailure()
+				.assertThatFailure().isUnexpectedException()
+				.assertThatException().isInstanceOf(NullPointerException.class);
+		}
+
+		@Test
+		void when_ignore_nullStrategy_then_return_failure() {
+			var processor = InputProcessor.builder().forString()
+				.nullStrategy(NullStrategy.IGNORE)
+				.sanitize(String::strip)
+				.build();
+
+			var actualResult = processor.process(null);
+
+			ProcessResultAssert.assertThat(actualResult).isSuccessWithValue(null);
+		}
+
+	}
 
 	@Nested
 	class Sanitization {

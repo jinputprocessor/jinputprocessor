@@ -21,6 +21,13 @@ public interface InputProcessorBuilder<IN, OUT, SELF extends InputProcessorBuild
 	InputProcessor<IN, OUT> build();
 
 	/**
+	 * 
+	 * @param nullStrategy
+	 * @return
+	 */
+	SELF nullStrategy(NullStrategy nullStrategy);
+
+	/**
 	 * Sanitize the value: any transformation function can be applied.
 	 * 
 	 * @param sanitizationFunction	Any transformation function, to be applied to the value

@@ -4,7 +4,9 @@ import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.InputProcessors;
 import io.github.jinputprocessor.ProcessFailure.ValidationFailure;
 import io.github.jinputprocessor.builder.InputProcessorBuilder;
+import io.github.jinputprocessor.builder.NullStrategy;
 import io.github.jinputprocessor.builder.base.types.ObjectInputProcessorBuilder;
+import io.github.jinputprocessor.processor.NullStrategyProcessor;
 import jakarta.annotation.Nonnull;
 import java.util.Objects;
 import java.util.function.Function;
@@ -15,6 +17,11 @@ public abstract class AbstractInputProcessorBuilder<IN, OUT, SELF extends Abstra
 
 	public AbstractInputProcessorBuilder(InputProcessor<IN, OUT> previous) {
 		this.process = Objects.requireNonNull(previous);
+	}
+
+	@Override
+	public SELF nullStrategy(NullStrategy nullStrategy) {
+		return newInstance(new NullStrategyProcessor<>(nullStrategy, this.build()));
 	}
 
 	@Override
@@ -29,7 +36,7 @@ public abstract class AbstractInputProcessorBuilder<IN, OUT, SELF extends Abstra
 
 	@Override
 	public SELF apply(InputProcessor<OUT, OUT> processor) {
-		return newInstance(this.process.andThen(processor));
+		return newInstance(this.build().andThen(processor));
 	}
 
 	protected abstract SELF newInstance(InputProcessor<IN, OUT> process);
@@ -43,7 +50,7 @@ public abstract class AbstractInputProcessorBuilder<IN, OUT, SELF extends Abstra
 	public <NEW_OUT, B extends InputProcessorBuilder<IN, NEW_OUT, B>> B map(
 		Function<OUT, NEW_OUT> mappingFunction, Function<InputProcessor<IN, NEW_OUT>, B> builderFunction
 	) {
-		return builderFunction.apply(InputProcessors.mappingProcessor(this.process, mappingFunction));
+		return builderFunction.apply(InputProcessors.mappingProcessor(this.build(), mappingFunction));
 	}
 
 	@Override

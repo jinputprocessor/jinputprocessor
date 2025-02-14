@@ -1,7 +1,7 @@
 package io.github.jinputprocessor;
 
-import io.github.jinputprocessor.result.ProcessFailureMapper;
 import io.github.jinputprocessor.result.InputProcessorFailureExceptionMapper;
+import io.github.jinputprocessor.result.ProcessFailureMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import java.util.Objects;
@@ -36,11 +36,13 @@ public class ProcessResult<T> {
 	private final ProcessFailureMapper failureMapper;
 	private final @Nullable T value;
 	private final @Nullable ProcessFailure failure;
+	private final boolean interrupt;
 
-	private ProcessResult(@Nullable T value, @Nullable ProcessFailure failure, @Nonnull ProcessFailureMapper failureMapper) {
+	private ProcessResult(@Nullable T value, @Nullable ProcessFailure failure, @Nonnull ProcessFailureMapper failureMapper, boolean interrupt) {
 		this.value = value;
 		this.failure = failure;
 		this.failureMapper = Objects.requireNonNull(failureMapper, "failureMapper cannot be null");
+		this.interrupt = interrupt;
 	}
 
 	/**
@@ -52,7 +54,7 @@ public class ProcessResult<T> {
 	 * @return	A successful process result
 	 */
 	public static <OUT> ProcessResult<OUT> success(@Nullable OUT value) {
-		return new ProcessResult<OUT>(value, null, defaultFailureMapper);
+		return new ProcessResult<OUT>(value, null, defaultFailureMapper, false);
 	}
 
 	/**
@@ -65,7 +67,16 @@ public class ProcessResult<T> {
 	 */
 	public static <OUT> ProcessResult<OUT> failure(@Nonnull ProcessFailure failure) {
 		Objects.requireNonNull(failure, "failure cannot be null");
-		return new ProcessResult<>(null, failure, defaultFailureMapper);
+		return new ProcessResult<>(null, failure, defaultFailureMapper, false);
+	}
+
+	/**
+	 * 
+	 * @param <OUT>
+	 * @return
+	 */
+	public static <OUT> ProcessResult<OUT> interrupt() {
+		return new ProcessResult<>(null, null, defaultFailureMapper, true);
 	}
 
 	// ------------------------------------------------------------------------------------------------------------
@@ -142,7 +153,11 @@ public class ProcessResult<T> {
 		if (failure == null) {
 			return this;
 		}
-		return new ProcessResult<>(value, failure.atPath(path), failureMapper);
+		return new ProcessResult<>(value, failure.atPath(path), failureMapper, interrupt);
+	}
+
+	public boolean isInterrupt() {
+		return interrupt;
 	}
 
 	// ===========================================================================================================
