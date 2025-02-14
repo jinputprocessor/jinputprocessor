@@ -10,6 +10,10 @@ public abstract class AbstractValidationBuilder<IN, T, B extends InputProcessorB
 		super(builder);
 	}
 
+	public B then() {
+		return builder;
+	}
+
 	public final SELF isNotNull() {
 		builder = builder.validate(
 			value -> value == null

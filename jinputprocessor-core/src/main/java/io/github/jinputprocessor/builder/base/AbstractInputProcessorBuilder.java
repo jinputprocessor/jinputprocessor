@@ -4,7 +4,6 @@ import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.InputProcessors;
 import io.github.jinputprocessor.ProcessFailure.ValidationFailure;
 import io.github.jinputprocessor.builder.InputProcessorBuilder;
-import io.github.jinputprocessor.builder.NullStrategy;
 import io.github.jinputprocessor.builder.base.types.ObjectInputProcessorBuilder;
 import jakarta.annotation.Nonnull;
 import java.util.Objects;
@@ -19,8 +18,9 @@ public abstract class AbstractInputProcessorBuilder<IN, OUT, SELF extends Abstra
 	}
 
 	@Override
-	public SELF nullStrategy(NullStrategy nullStrategy) {
-		return apply(InputProcessors.nullStrategyProcessor(nullStrategy, InputProcessors.noOpProcessor()));
+	@SuppressWarnings("unchecked")
+	public NullStrategyBuilder<IN, OUT, SELF> nullStrategy() {
+		return new NullStrategyBuilder<>((SELF) this);
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package io.github.jinputprocessor.processor;
 
 import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.ProcessResult;
-import io.github.jinputprocessor.builder.NullStrategy;
 import jakarta.annotation.Nonnull;
 import java.util.Objects;
 
@@ -10,6 +9,14 @@ public class NullStrategyProcessor<IN, OUT> implements InputProcessor<IN, OUT> {
 
 	private final @Nonnull NullStrategy strategy;
 	private final @Nonnull InputProcessor<IN, OUT> nextProcessor;
+
+	public static enum NullStrategy {
+
+		PROCESS,
+
+		IGNORE;
+
+	}
 
 	public NullStrategyProcessor(@Nonnull NullStrategy strategy, @Nonnull InputProcessor<IN, OUT> nextProcessor) {
 		this.strategy = Objects.requireNonNull(strategy, "null strategy cannot be null");

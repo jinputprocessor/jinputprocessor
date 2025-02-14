@@ -4,7 +4,6 @@ import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.ProcessFailure.ValidationFailure.ObjectIsNotInstanceOf;
 import io.github.jinputprocessor.ProcessFailure.ValidationFailure.ObjectIsNull;
 import io.github.jinputprocessor.ProcessResultAssert;
-import io.github.jinputprocessor.builder.NullStrategy;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +29,7 @@ class ObjectInputProcessorBuilderTest {
 		@Test
 		void when_process_nullStrategy_then_return_failure() {
 			var processor = InputProcessor.builder().forString()
-				.nullStrategy(NullStrategy.PROCESS)
+				.nullStrategy().processNull()
 				.sanitize(String::strip)
 				.build();
 
@@ -44,7 +43,7 @@ class ObjectInputProcessorBuilderTest {
 		@Test
 		void when_ignore_nullStrategy_then_return_failure() {
 			var processor = InputProcessor.builder().forString()
-				.nullStrategy(NullStrategy.IGNORE)
+				.nullStrategy().ignoreNull()
 				.sanitize(String::strip)
 				.build();
 
@@ -54,15 +53,31 @@ class ObjectInputProcessorBuilderTest {
 		}
 
 		@Test
+		void when_consecutiveStrategies_then_last_applies() {
+			var processor = InputProcessor.builder().forString()
+				.nullStrategy().ignoreNull()
+				.nullStrategy().processNull()
+				.nullStrategy().ignoreNull()
+				.sanitize(value -> value + "-1")
+				.build();
+
+			System.out.println(processor);
+
+			var actualResult = processor.process(null);
+
+			ProcessResultAssert.assertThat(actualResult).isSuccessWithValue(null);
+		}
+
+		@Test
 		void when_mixedStrategies_then_last_applies() {
 			var processor = InputProcessor.builder().forString()
-				.nullStrategy(NullStrategy.IGNORE)
+				.nullStrategy().ignoreNull()
 				.sanitize(value -> value + "-1")
-				.nullStrategy(NullStrategy.PROCESS)
+				.nullStrategy().processNull()
 				.sanitize(value -> value + "-2")
-				.nullStrategy(NullStrategy.IGNORE)
+				.nullStrategy().ignoreNull()
 				.sanitize(value -> value + "-3")
-				.nullStrategy(NullStrategy.PROCESS)
+				.nullStrategy().processNull()
 				.sanitize(value -> value + "-4")
 				.build();
 

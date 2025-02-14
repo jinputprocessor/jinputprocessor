@@ -35,6 +35,11 @@ public class ChainedProcessor<IN, OUT, NEW_OUT> implements InputProcessor<IN, NE
 	}
 
 	@Override
+	public <NEW_OUT2> InputProcessor<IN, NEW_OUT2> andThen(InputProcessor<NEW_OUT, NEW_OUT2> after) {
+		return new ChainedProcessor<>(firstProcessor, secondProcessor.andThen(after));
+	}
+
+	@Override
 	public String toString() {
 		return "ChainedProcessor\n"
 			+ firstProcessor.toString().indent(2)

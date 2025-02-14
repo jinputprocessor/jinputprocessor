@@ -25,8 +25,4 @@ abstract class AbstractIntermediateBuilder<IN, T, B extends InputProcessorBuilde
 		return (SELF) this;
 	}
 
-	public B then() {
-		return builder;
-	}
-
 }

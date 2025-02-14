@@ -1,10 +1,10 @@
 package io.github.jinputprocessor;
 
 import io.github.jinputprocessor.ProcessFailure.ValidationFailure;
-import io.github.jinputprocessor.builder.NullStrategy;
 import io.github.jinputprocessor.processor.MappingProcessor;
 import io.github.jinputprocessor.processor.NoOpProcessor;
 import io.github.jinputprocessor.processor.NullStrategyProcessor;
+import io.github.jinputprocessor.processor.NullStrategyProcessor.NullStrategy;
 import io.github.jinputprocessor.processor.SanitizationProcessor;
 import io.github.jinputprocessor.processor.ValidationProcessor;
 import jakarta.annotation.Nonnull;

@@ -3,6 +3,7 @@ package io.github.jinputprocessor.builder;
 import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.ProcessFailure;
 import io.github.jinputprocessor.ProcessFailure.ValidationFailure;
+import io.github.jinputprocessor.builder.base.NullStrategyBuilder;
 import jakarta.annotation.Nonnull;
 import java.util.function.Function;
 
@@ -25,7 +26,7 @@ public interface InputProcessorBuilder<IN, OUT, SELF extends InputProcessorBuild
 	 * @param nullStrategy
 	 * @return
 	 */
-	SELF nullStrategy(NullStrategy nullStrategy);
+	NullStrategyBuilder<IN, OUT, SELF> nullStrategy();
 
 	/**
 	 * Sanitize the value: any transformation function can be applied.
