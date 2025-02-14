@@ -64,4 +64,10 @@ public class SequencedCollectionIterationProcessor<C_IN extends SequencedCollect
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "SequencedCollectionIterationProcessor\n"
+			+ elementProcessor.toString().indent(2);
+	}
+
 }

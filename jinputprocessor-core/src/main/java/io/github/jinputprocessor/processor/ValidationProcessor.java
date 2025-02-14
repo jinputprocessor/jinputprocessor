@@ -31,4 +31,9 @@ public class ValidationProcessor<T> implements InputProcessor<T, T> {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "ValidationProcessor";
+	}
+
 }

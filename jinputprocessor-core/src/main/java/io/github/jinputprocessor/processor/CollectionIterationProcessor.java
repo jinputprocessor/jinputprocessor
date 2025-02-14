@@ -40,4 +40,10 @@ public class CollectionIterationProcessor<C_IN extends Collection<T>, T, C_OUT e
 		return ProcessResult.success(newCollection);
 	}
 
+	@Override
+	public String toString() {
+		return "CollectionIterationProcessor\n"
+			+ elementProcessor.toString().indent(2);
+	}
+
 }

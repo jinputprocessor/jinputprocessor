@@ -17,11 +17,26 @@ public class NullStrategyProcessor<IN, OUT> implements InputProcessor<IN, OUT> {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public <NEW_OUT> InputProcessor<IN, NEW_OUT> andThen(InputProcessor<OUT, NEW_OUT> after) {
+		if (after instanceof NullStrategyProcessor nullStrategyProcessor) {
+			return new ChainedProcessor<>(this, nullStrategyProcessor);
+		}
+		return new NullStrategyProcessor<>(strategy, nextProcessor.andThen(after));
+	}
+
+	@Override
 	public ProcessResult<OUT> process(IN value) {
 		return switch (strategy) {
-			case IGNORE -> value == null ? ProcessResult.interrupt() : nextProcessor.process(value);
+			case IGNORE -> value == null ? ProcessResult.success(null) : nextProcessor.process(value);
 			case PROCESS -> nextProcessor.process(value);
 		};
+	}
+
+	@Override
+	public String toString() {
+		return "NullStrategyProcessor / " + strategy + "\n"
+			+ nextProcessor.toString().indent(2);
 	}
 
 }

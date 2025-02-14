@@ -18,9 +18,6 @@ public class ChainedProcessor<IN, OUT, NEW_OUT> implements InputProcessor<IN, NE
 	@Override
 	public ProcessResult<NEW_OUT> process(IN value) {
 		var resultOut = firstProcessor.process(value);
-		if (resultOut.isInterrupt()) {
-			return ProcessResult.interrupt();
-		}
 		if (resultOut.isFailure()) {
 			return ProcessResult.failure(resultOut.getFailure());
 		}
@@ -35,6 +32,13 @@ public class ChainedProcessor<IN, OUT, NEW_OUT> implements InputProcessor<IN, NE
 
 	public InputProcessor<OUT, NEW_OUT> getSecondProcessor() {
 		return secondProcessor;
+	}
+
+	@Override
+	public String toString() {
+		return "ChainedProcessor\n"
+			+ firstProcessor.toString().indent(2)
+			+ secondProcessor.toString().indent(2);
 	}
 
 }

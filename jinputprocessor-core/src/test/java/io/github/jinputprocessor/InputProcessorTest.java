@@ -17,7 +17,28 @@ class InputProcessorTest {
 
 			var actualResult = processStr.process("test");
 
-			Assertions.assertThat(actualResult).isSameAs(expectedResult);
+			Assertions.assertThat(actualResult).isEqualTo(expectedResult);
+		}
+
+		@Test
+		void nominal_valid_atProperty() {
+			var expectedResult = ProcessResult.success("OK");
+			InputProcessor<String, String> processStr = value -> expectedResult;
+
+			var actualResult = processStr.process("myVal", "test");
+
+			Assertions.assertThat(actualResult).isEqualTo(expectedResult.atPath(Path.createPropertyPath("myVal")));
+		}
+
+		@Test
+		void nominal_valid_atPath() {
+			Path path = Path.createPropertyPath("myVal").atIndex(0);
+			var expectedResult = ProcessResult.success("OK");
+			InputProcessor<String, String> processStr = value -> expectedResult;
+
+			var actualResult = processStr.process(path, "test");
+
+			Assertions.assertThat(actualResult).isEqualTo(expectedResult.atPath(path));
 		}
 
 		@Test
@@ -28,7 +49,30 @@ class InputProcessorTest {
 
 			var actualResult = processStr.process("test");
 
-			Assertions.assertThat(actualResult).isSameAs(expectedResult);
+			Assertions.assertThat(actualResult).isEqualTo(expectedResult);
+		}
+
+		@Test
+		void nominal_error_atProperty() {
+			var validationFailure = new ValidationFailure.ObjectIsNull();
+			ProcessResult<String> expectedResult = ProcessResult.failure(validationFailure);
+			InputProcessor<String, String> processStr = value -> expectedResult;
+
+			var actualResult = processStr.process("myVal", "test");
+
+			Assertions.assertThat(actualResult).isEqualTo(expectedResult.atPath(Path.createPropertyPath("myVal")));
+		}
+
+		@Test
+		void nominal_error_atPath() {
+			Path path = Path.createPropertyPath("myVal").atIndex(0);
+			var validationFailure = new ValidationFailure.ObjectIsNull();
+			ProcessResult<String> expectedResult = ProcessResult.failure(validationFailure);
+			InputProcessor<String, String> processStr = value -> expectedResult;
+
+			var actualResult = processStr.process(path, "test");
+
+			Assertions.assertThat(actualResult).isEqualTo(expectedResult.atPath(path));
 		}
 
 	}

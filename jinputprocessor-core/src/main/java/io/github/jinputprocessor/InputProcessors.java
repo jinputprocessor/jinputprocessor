@@ -1,7 +1,10 @@
 package io.github.jinputprocessor;
 
 import io.github.jinputprocessor.ProcessFailure.ValidationFailure;
+import io.github.jinputprocessor.builder.NullStrategy;
 import io.github.jinputprocessor.processor.MappingProcessor;
+import io.github.jinputprocessor.processor.NoOpProcessor;
+import io.github.jinputprocessor.processor.NullStrategyProcessor;
 import io.github.jinputprocessor.processor.SanitizationProcessor;
 import io.github.jinputprocessor.processor.ValidationProcessor;
 import jakarta.annotation.Nonnull;
@@ -24,7 +27,18 @@ public class InputProcessors {
 	 * @return	A processor ready to be used or combined with other processor(s)
 	 */
 	public static <T> InputProcessor<T, T> noOpProcessor() {
-		return value -> ProcessResult.success(value);
+		return new NoOpProcessor<>();
+	}
+
+	/**
+	 * 
+	 * @param <IN>
+	 * @param <OUT>
+	 * @param nullStrategy
+	 * @return
+	 */
+	public static <IN, OUT> InputProcessor<IN, OUT> nullStrategyProcessor(NullStrategy nullStrategy, InputProcessor<IN, OUT> nextProcessor) {
+		return new NullStrategyProcessor<>(nullStrategy, nextProcessor);
 	}
 
 	/**

@@ -53,6 +53,24 @@ class ObjectInputProcessorBuilderTest {
 			ProcessResultAssert.assertThat(actualResult).isSuccessWithValue(null);
 		}
 
+		@Test
+		void when_mixedStrategies_then_last_applies() {
+			var processor = InputProcessor.builder().forString()
+				.nullStrategy(NullStrategy.IGNORE)
+				.sanitize(value -> value + "-1")
+				.nullStrategy(NullStrategy.PROCESS)
+				.sanitize(value -> value + "-2")
+				.nullStrategy(NullStrategy.IGNORE)
+				.sanitize(value -> value + "-3")
+				.nullStrategy(NullStrategy.PROCESS)
+				.sanitize(value -> value + "-4")
+				.build();
+
+			var actualResult = processor.process(null);
+
+			ProcessResultAssert.assertThat(actualResult).isSuccessWithValue("null-2-3-4");
+		}
+
 	}
 
 	@Nested

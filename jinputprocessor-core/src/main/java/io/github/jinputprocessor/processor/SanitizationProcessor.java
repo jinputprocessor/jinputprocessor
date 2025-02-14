@@ -25,4 +25,9 @@ public class SanitizationProcessor<IN, OUT> implements InputProcessor<IN, OUT> {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "SanitizationProcessor";
+	}
+
 }
