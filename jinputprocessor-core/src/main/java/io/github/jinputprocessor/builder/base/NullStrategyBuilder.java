@@ -1,5 +1,6 @@
 package io.github.jinputprocessor.builder.base;
 
+import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.InputProcessors;
 import io.github.jinputprocessor.builder.InputProcessorBuilder;
 import io.github.jinputprocessor.processor.NullStrategyProcessor.NullStrategy;
@@ -9,10 +10,6 @@ public class NullStrategyBuilder<IN, OUT, B extends InputProcessorBuilder<IN, OU
 
 	public NullStrategyBuilder(B builder) {
 		super(builder);
-	}
-
-	public B then() {
-		return builder;
 	}
 
 	/**
@@ -43,8 +40,9 @@ public class NullStrategyBuilder<IN, OUT, B extends InputProcessorBuilder<IN, OU
 	 * 
 	 * @return the calling builder
 	 */
+	@SuppressWarnings("unchecked")
 	public final B useDefault(IN defaultValue) {
-		builder = builder.apply(InputProcessors.nullStrategyProcessor(NullStrategy.useDefault(defaultValue), InputProcessors.noOpProcessor()));
+		builder = builder.apply((InputProcessor<OUT, OUT>) InputProcessors.nullStrategyProcessor(NullStrategy.useDefault(defaultValue), InputProcessors.noOpProcessor()));
 		return builder;
 	}
 

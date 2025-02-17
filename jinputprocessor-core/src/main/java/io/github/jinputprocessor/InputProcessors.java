@@ -1,6 +1,7 @@
 package io.github.jinputprocessor;
 
 import io.github.jinputprocessor.ProcessFailure.ValidationFailure;
+import io.github.jinputprocessor.processor.ChainedProcessor;
 import io.github.jinputprocessor.processor.MappingProcessor;
 import io.github.jinputprocessor.processor.NoOpProcessor;
 import io.github.jinputprocessor.processor.NullStrategyProcessor;
@@ -13,7 +14,7 @@ import java.util.function.Function;
 /**
  * Utility class to create various processors.
  */
-public class InputProcessors {
+public final class InputProcessors {
 
 	private InputProcessors() {
 		// Utility class
@@ -37,7 +38,7 @@ public class InputProcessors {
 	 * @param nullStrategy
 	 * @return
 	 */
-	public static <IN, OUT> InputProcessor<IN, OUT> nullStrategyProcessor(NullStrategy nullStrategy, InputProcessor<IN, OUT> nextProcessor) {
+	public static <IN, OUT> InputProcessor<IN, OUT> nullStrategyProcessor(NullStrategy<IN> nullStrategy, InputProcessor<IN, OUT> nextProcessor) {
 		return new NullStrategyProcessor<>(nullStrategy, nextProcessor);
 	}
 
@@ -97,6 +98,18 @@ public class InputProcessors {
 	) {
 		var mappingProcess = new MappingProcessor<>(mappingFunction);
 		return initialProcessor.andThen(mappingProcess);
+	}
+
+	/**
+	 * Creates a processor that chains the output of the first processor to the input of the second processor.
+	 * 
+	 * @param inputProcessor	First processor of the chain, cannot be <code>null</code>
+	 * @param secondProcessor	Second processor of the chain, cannot be <code>null</code>
+	 * 
+	 * @return						A processor ready to be used or combined with other processor(s)
+	 */
+	public static <IN, OUT, NEW_OUT> InputProcessor<IN, NEW_OUT> chainedProcessor(@Nonnull InputProcessor<IN, OUT> firstProcessor, @Nonnull InputProcessor<OUT, NEW_OUT> secondProcessor) {
+		return new ChainedProcessor<>(firstProcessor, secondProcessor);
 	}
 
 }

@@ -1,7 +1,6 @@
 package io.github.jinputprocessor;
 
 import io.github.jinputprocessor.builder.Builder;
-import io.github.jinputprocessor.processor.ChainedProcessor;
 import io.github.jinputprocessor.result.ProcessFailureMapper;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -78,7 +77,7 @@ public interface InputProcessor<IN, OUT> {
 	 */
 	@Nonnull
 	default <NEW_OUT> InputProcessor<IN, NEW_OUT> andThen(InputProcessor<OUT, NEW_OUT> after) {
-		return new ChainedProcessor<>(this, after);
+		return InputProcessors.chainedProcessor(this, after);
 	}
 
 	// ===========================================================================================================
