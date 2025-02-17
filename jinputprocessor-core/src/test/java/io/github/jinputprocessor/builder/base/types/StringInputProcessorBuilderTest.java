@@ -25,7 +25,6 @@ class StringInputProcessorBuilderTest {
 			public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
 				return Stream.of(
 					// Test description, sanitizerCustomizer, input, expectedOutput
-					Arguments.of("defaultIfNull", build(builder -> builder.defaultIfNull("plop")), null, "plop"),
 					Arguments.of("strip", build(builder -> builder.strip()), " value ", "value"),
 					Arguments.of("toLowerCase", build(builder -> builder.toLowerCase()), "THIS IS Éé", "this is éé"),
 					Arguments.of("toUpperCase", build(builder -> builder.toUpperCase()), "this is Éé", "THIS IS ÉÉ")

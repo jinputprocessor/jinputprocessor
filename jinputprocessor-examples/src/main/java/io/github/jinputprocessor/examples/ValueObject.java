@@ -52,8 +52,8 @@ public class ValueObject {
 		// @formatter:off
 		private static final InputProcessor<String, LastName> PROCESSOR = InputProcessor.builder()
 			.forString()
+			.ifNullThen().useDefault("N/A")
 			.sanitize()
-				.defaultIfNull("N/A")
 				.strip()
 				.toUpperCase()
 				.then()

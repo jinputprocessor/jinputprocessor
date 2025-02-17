@@ -135,24 +135,24 @@ class ObjectInputProcessorBuilderTest {
 		}
 
 		@Nested
-		class DefaultIfNull {
+		class ApplyTest {
 
-			static final Object DEFAULT_OBJECT = new Object();
+			static final Object NEW_OBJECT = new Object();
 			static final InputProcessor<Object, Object> PROCESSOR = InputProcessor.builder().forClass(Object.class)
-				.sanitize().defaultIfNull(DEFAULT_OBJECT).then()
+				.sanitize().apply(v -> NEW_OBJECT).then()
 				.build();
 
 			@Test
-			void when_nullInput_then_return_default() {
+			void when_applyWithNull_then_function_is_called() {
 				var actualResult = PROCESSOR.process(null);
-				ProcessResultAssert.assertThat(actualResult).isSuccessWithValue(DEFAULT_OBJECT);
+				ProcessResultAssert.assertThat(actualResult).isSuccessWithValue(NEW_OBJECT);
 			}
 
 			@Test
-			void when_nonNullInput_then_return_input() {
+			void when_apply_then_function_is_called() {
 				var nonNullObject = new Object();
 				var actualResult = PROCESSOR.process(nonNullObject);
-				ProcessResultAssert.assertThat(actualResult).isSuccessWithValue(nonNullObject);
+				ProcessResultAssert.assertThat(actualResult).isSuccessWithValue(NEW_OBJECT);
 			}
 
 		}
