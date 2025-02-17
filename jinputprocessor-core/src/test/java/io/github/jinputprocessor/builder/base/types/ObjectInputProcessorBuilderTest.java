@@ -1,6 +1,7 @@
 package io.github.jinputprocessor.builder.base.types;
 
 import io.github.jinputprocessor.InputProcessor;
+import io.github.jinputprocessor.ProcessFailure;
 import io.github.jinputprocessor.ProcessFailure.ValidationFailure.ObjectIsNotInstanceOf;
 import io.github.jinputprocessor.ProcessFailure.ValidationFailure.ObjectIsNull;
 import io.github.jinputprocessor.ProcessResultAssert;
@@ -44,6 +45,17 @@ class ObjectInputProcessorBuilderTest {
 				.build();
 
 			ProcessResultAssert.assertThat(processor.process(null)).isSuccessWithValue(null);
+			ProcessResultAssert.assertThat(processor.process("val")).isSuccessWithValue("val-1");
+		}
+
+		@Test
+		void fail() {
+			var processor = InputProcessor.builder().forString()
+				.ifNullThen().fail()
+				.sanitize(value -> value + "-1")
+				.build();
+
+			ProcessResultAssert.assertThat(processor.process(null)).isFailure(new ProcessFailure.ValidationFailure.ObjectIsNull());
 			ProcessResultAssert.assertThat(processor.process("val")).isSuccessWithValue("val-1");
 		}
 

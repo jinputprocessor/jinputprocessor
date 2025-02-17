@@ -27,7 +27,7 @@ public class MappingProcessor<OUT, NEW_OUT> implements InputProcessor<OUT, NEW_O
 
 	@Override
 	public String toString() {
-		return "MappingProcessor";
+		return "MappingProcessor -> " + mappingFunction.toString();
 	}
 
 }

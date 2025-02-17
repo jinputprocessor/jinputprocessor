@@ -2,6 +2,8 @@ package io.github.jinputprocessor.builder.base;
 
 import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.InputProcessors;
+import io.github.jinputprocessor.ProcessFailure;
+import io.github.jinputprocessor.ProcessResult;
 import io.github.jinputprocessor.builder.InputProcessorBuilder;
 import io.github.jinputprocessor.processor.NullStrategyProcessor.NullStrategy;
 
@@ -30,6 +32,16 @@ public class NullStrategyBuilder<IN, OUT, B extends InputProcessorBuilder<IN, OU
 	 */
 	public final B skipProcess() {
 		builder = builder.apply(InputProcessors.nullStrategyProcessor(NullStrategy.skipProcess(), InputProcessors.noOpProcessor()));
+		return builder;
+	}
+
+	/**
+	 * Fail the process of <code>null</code> value, meaning the {@link ProcessResult} will be a failure with cause {@link ProcessFailure.ValidationFailure.ObjectIsNull}.
+	 * 
+	 * @return the calling builder
+	 */
+	public final B fail() {
+		builder = builder.apply(InputProcessors.nullStrategyProcessor(NullStrategy.fail(), InputProcessors.noOpProcessor()));
 		return builder;
 	}
 

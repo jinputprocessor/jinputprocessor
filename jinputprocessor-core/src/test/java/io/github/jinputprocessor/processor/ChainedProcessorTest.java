@@ -6,6 +6,7 @@ import io.github.jinputprocessor.ProcessResult;
 import io.github.jinputprocessor.ProcessResultAssert;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class ChainedProcessorTest {
@@ -39,6 +40,25 @@ class ChainedProcessorTest {
 		ProcessResultAssert.assertThat(actualResult).isFailure()
 			.assertThatFailure().isEqualTo(validationFailure);
 		Assertions.assertThat(secondProcessIsCalled).isFalse();
+	}
+
+	@Nested
+	class ToStringTest {
+
+		@Test
+		void nominal() {
+			InputProcessor<String, String> subProcessor1 = value -> ProcessResult.success(value + "-1");
+			InputProcessor<String, String> subProcessor2 = value -> ProcessResult.success(value + "-2");
+
+			var processor = new ChainedProcessor<>(subProcessor1, subProcessor2);
+			var actual = processor.toString();
+
+			Assertions.assertThat(actual)
+				.startsWith("ChainedProcessor")
+				.contains("  " + subProcessor1.toString())
+				.contains("  " + subProcessor2.toString());
+		}
+
 	}
 
 }

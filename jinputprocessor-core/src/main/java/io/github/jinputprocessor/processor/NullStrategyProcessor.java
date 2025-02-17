@@ -1,6 +1,7 @@
 package io.github.jinputprocessor.processor;
 
 import io.github.jinputprocessor.InputProcessor;
+import io.github.jinputprocessor.ProcessFailure;
 import io.github.jinputprocessor.ProcessResult;
 import jakarta.annotation.Nonnull;
 import java.util.Objects;
@@ -27,8 +28,9 @@ public class NullStrategyProcessor<IN, OUT> implements InputProcessor<IN, OUT> {
 	@Override
 	public ProcessResult<OUT> process(IN value) {
 		return switch (strategy) {
-			case SkipProcess<?> str -> value == null ? ProcessResult.success(null) : nextProcessor.process(value);
 			case Process<?> str -> nextProcessor.process(value);
+			case SkipProcess<?> str -> value == null ? ProcessResult.success(null) : nextProcessor.process(value);
+			case Fail<?> str -> value == null ? ProcessResult.failure(str.failure()) : nextProcessor.process(value);
 			case UseDefault<IN> str -> value == null ? nextProcessor.process(str.value()) : nextProcessor.process(value);
 		};
 	}
@@ -50,6 +52,10 @@ public class NullStrategyProcessor<IN, OUT> implements InputProcessor<IN, OUT> {
 			return new SkipProcess<>();
 		}
 
+		static <T> NullStrategy<T> fail() {
+			return new Fail<>();
+		}
+
 		static <T> NullStrategy<T> useDefault(@Nonnull T value) {
 			return new UseDefault<>(value);
 		}
@@ -61,6 +67,18 @@ public class NullStrategyProcessor<IN, OUT> implements InputProcessor<IN, OUT> {
 	}
 
 	private static record SkipProcess<T>() implements NullStrategy<T> {
+
+	}
+
+	private static record Fail<T>(ProcessFailure failure) implements NullStrategy<T> {
+
+		public Fail(@Nonnull ProcessFailure failure) {
+			this.failure = Objects.requireNonNull(failure, "failure cannot be null");
+		}
+
+		public Fail() {
+			this(new ProcessFailure.ValidationFailure.ObjectIsNull());
+		}
 
 	}
 
