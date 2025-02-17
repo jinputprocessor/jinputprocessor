@@ -22,11 +22,11 @@ public interface InputProcessorBuilder<IN, OUT, SELF extends InputProcessorBuild
 	InputProcessor<IN, OUT> build();
 
 	/**
+	 * Defines a strategy to handle <code>null</code> value.
 	 * 
-	 * @param nullStrategy
-	 * @return
+	 * @return	a builder for <code>null</code> strategies
 	 */
-	NullStrategyBuilder<IN, OUT, SELF> nullStrategy();
+	NullStrategyBuilder<IN, OUT, SELF> ifNullThen();
 
 	/**
 	 * Sanitize the value: any transformation function can be applied.

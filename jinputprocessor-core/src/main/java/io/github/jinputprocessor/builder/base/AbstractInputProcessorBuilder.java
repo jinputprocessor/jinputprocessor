@@ -19,7 +19,7 @@ public abstract class AbstractInputProcessorBuilder<IN, OUT, SELF extends Abstra
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public NullStrategyBuilder<IN, OUT, SELF> nullStrategy() {
+	public NullStrategyBuilder<IN, OUT, SELF> ifNullThen() {
 		return new NullStrategyBuilder<>((SELF) this);
 	}
 

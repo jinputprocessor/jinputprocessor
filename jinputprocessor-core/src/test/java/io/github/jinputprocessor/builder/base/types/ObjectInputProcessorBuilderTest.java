@@ -4,6 +4,7 @@ import io.github.jinputprocessor.InputProcessor;
 import io.github.jinputprocessor.ProcessFailure.ValidationFailure.ObjectIsNotInstanceOf;
 import io.github.jinputprocessor.ProcessFailure.ValidationFailure.ObjectIsNull;
 import io.github.jinputprocessor.ProcessResultAssert;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -13,83 +14,111 @@ class ObjectInputProcessorBuilderTest {
 	class NullStrategyTest {
 
 		@Test
-		void when_no_nullStrategy_then_return_failure() {
+		void when_no_nullStrategy_then_nullIsProcessed() {
 			var processor = InputProcessor.builder().forString()
 				// no null strategy
-				.sanitize(String::strip)
-				.build();
-
-			var actualResult = processor.process(null);
-
-			ProcessResultAssert.assertThat(actualResult).isFailure()
-				.assertThatFailure().isUnexpectedException()
-				.assertThatException().isInstanceOf(NullPointerException.class);
-		}
-
-		@Test
-		void when_process_nullStrategy_then_return_failure() {
-			var processor = InputProcessor.builder().forString()
-				.nullStrategy().processNull()
-				.sanitize(String::strip)
-				.build();
-
-			var actualResult = processor.process(null);
-
-			ProcessResultAssert.assertThat(actualResult).isFailure()
-				.assertThatFailure().isUnexpectedException()
-				.assertThatException().isInstanceOf(NullPointerException.class);
-		}
-
-		@Test
-		void when_ignore_nullStrategy_then_return_failure() {
-			var processor = InputProcessor.builder().forString()
-				.nullStrategy().ignoreNull()
-				.sanitize(String::strip)
-				.build();
-
-			var actualResult = processor.process(null);
-
-			ProcessResultAssert.assertThat(actualResult).isSuccessWithValue(null);
-		}
-
-		@Test
-		void when_consecutiveStrategies_then_last_applies() {
-			var processor = InputProcessor.builder().forString()
-				.nullStrategy().ignoreNull()
-				.nullStrategy().processNull()
-				.nullStrategy().ignoreNull()
 				.sanitize(value -> value + "-1")
 				.build();
 
-			System.out.println(processor);
-
 			var actualResult = processor.process(null);
 
-			ProcessResultAssert.assertThat(actualResult).isSuccessWithValue(null);
+			ProcessResultAssert.assertThat(actualResult).isSuccessWithValue("null-1");
 		}
 
 		@Test
-		void when_mixedStrategies_then_last_applies() {
+		void process() {
 			var processor = InputProcessor.builder().forString()
-				.nullStrategy().ignoreNull()
+				.ifNullThen().process()
 				.sanitize(value -> value + "-1")
-				.nullStrategy().processNull()
+				.build();
+
+			ProcessResultAssert.assertThat(processor.process(null)).isSuccessWithValue("null-1");
+			ProcessResultAssert.assertThat(processor.process("val")).isSuccessWithValue("val-1");
+		}
+
+		@Test
+		void skipProcess() {
+			var processor = InputProcessor.builder().forString()
+				.ifNullThen().skipProcess()
+				.sanitize(value -> value + "-1")
+				.build();
+
+			ProcessResultAssert.assertThat(processor.process(null)).isSuccessWithValue(null);
+			ProcessResultAssert.assertThat(processor.process("val")).isSuccessWithValue("val-1");
+		}
+
+		@Test
+		void useDefault() {
+			var processor = InputProcessor.builder().forString()
+				.ifNullThen().useDefault("default")
+				.sanitize(value -> value + "-1")
+				.build();
+
+			ProcessResultAssert.assertThat(processor.process(null)).isSuccessWithValue("default-1");
+			ProcessResultAssert.assertThat(processor.process("val")).isSuccessWithValue("val-1");
+		}
+
+		@Test
+		void when_useDefault_with_null_then_NPE() {
+			Assertions.assertThatNullPointerException()
+				.isThrownBy(
+					() -> InputProcessor.builder().forString()
+						.ifNullThen().useDefault(null) // null default value is not allowed
+						.build()
+				);
+		}
+
+		@Test
+		void mixedStrategies_1() {
+			var processor = InputProcessor.builder().forString()
+				.ifNullThen().skipProcess()
+				.ifNullThen().process()
+				.ifNullThen().skipProcess()
+				.sanitize(value -> value + "-1")
+				.build();
+
+			ProcessResultAssert.assertThat(processor.process(null)).isSuccessWithValue(null);
+			ProcessResultAssert.assertThat(processor.process("val")).isSuccessWithValue("val-1");
+		}
+
+		@Test
+		void mixedStrategies_2() {
+			var processor = InputProcessor.builder().forString()
+				.ifNullThen().skipProcess()
+				.ifNullThen().process()
+				.ifNullThen().useDefault("plop")
+				.ifNullThen().skipProcess()
+				.ifNullThen().process()
+				.sanitize(value -> value + "-1")
+				.build();
+
+			ProcessResultAssert.assertThat(processor.process(null)).isSuccessWithValue("plop-1");
+			ProcessResultAssert.assertThat(processor.process("val")).isSuccessWithValue("val-1");
+		}
+
+		@Test
+		void mixedStrategies_3() {
+			var processor = InputProcessor.builder().forString()
+				.ifNullThen().skipProcess()
+				.sanitize(value -> value + "-1")
+				.ifNullThen().process()
 				.sanitize(value -> value + "-2")
-				.nullStrategy().ignoreNull()
+				.ifNullThen().skipProcess()
 				.sanitize(value -> value + "-3")
-				.nullStrategy().processNull()
+				.ifNullThen().process()
 				.sanitize(value -> value + "-4")
+				.ifNullThen().useDefault("default")
+				.sanitize(value -> value + "-5")
 				.build();
 
-			var actualResult = processor.process(null);
-
-			ProcessResultAssert.assertThat(actualResult).isSuccessWithValue("null-2-3-4");
+			ProcessResultAssert.assertThat(processor.process(null)).isSuccessWithValue("null-2-3-4-5");
+			ProcessResultAssert.assertThat(processor.process("val")).isSuccessWithValue("val-1-2-3-4-5");
 		}
 
 	}
 
 	@Nested
-	class Sanitization {
+	class SanitizationTest {
 
 		@Test
 		void when_exception_then_return_failure() {
@@ -131,7 +160,7 @@ class ObjectInputProcessorBuilderTest {
 	}
 
 	@Nested
-	class Validation {
+	class ValidationTest {
 
 		@Test
 		void when_exception_then_return_failure() {
@@ -148,7 +177,7 @@ class ObjectInputProcessorBuilderTest {
 		}
 
 		@Nested
-		class IsNotNull {
+		class IsNotNullTest {
 
 			static final InputProcessor<Object, Object> PROCESSOR = InputProcessor.builder().forClass(Object.class)
 				.validateThat().isNotNull().then()
@@ -170,7 +199,7 @@ class ObjectInputProcessorBuilderTest {
 		}
 
 		@Nested
-		class IsInstanceOf {
+		class IsInstanceOfTest {
 
 			static final InputProcessor<Number, Number> PROCESSOR_FOR_NUMBER = InputProcessor.builder().forClass(Number.class)
 				.validateThat().isInstanceOf(Number.class).then()
@@ -215,7 +244,7 @@ class ObjectInputProcessorBuilderTest {
 	}
 
 	@Nested
-	class Mapping {
+	class MappingTest {
 
 		@Test
 		void when_exception_then_return_failure() {
