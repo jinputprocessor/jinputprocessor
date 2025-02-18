@@ -5,12 +5,38 @@
 	<parent>
 		<groupId>io.github.jinputprocessor</groupId>
 		<artifactId>jinputprocessor</artifactId>
-		<version>0.0.3</version>
+		<version>0.0.4-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>jinputprocessor-core</artifactId>
 
-	<packaging>pom</packaging>
+	<packaging>jar</packaging>
+	
+	<name>JInputProcessor</name>
+	<description>A Java library to sanitize, validate, transform inputs.</description>
+	<url>https://github.com/jinputprocessor/jinputprocessor</url>
+
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Samuel SCHNEGG</name>
+			<email>samuel.schnegg@gmail.com</email>
+			<organization>JInputProcessor</organization>
+			<organizationUrl>https://github.com/ComputerDaddyGuy</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git://github.com/jinputprocessor/jinputprocessor.git</connection>
+		<developerConnection>scm:git:ssh://github.com:jinputprocessor/jinputprocessor.git</developerConnection>
+		<url>https://github.com/jinputprocessor/jinputprocessor/tree/main</url>
+	</scm>
 	
 	<dependencies>
 		<dependency>
