@@ -5,9 +5,11 @@ import io.github.jinputprocessor.Path;
 import io.github.jinputprocessor.ProcessFailure;
 import io.github.jinputprocessor.ProcessResult;
 import jakarta.annotation.Nonnull;
+import java.util.List;
 import java.util.Objects;
 import java.util.SequencedCollection;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class SequencedCollectionIterationProcessor<C_IN extends SequencedCollection<T>, T, C_OUT extends SequencedCollection<OUT>, OUT> implements InputProcessor<C_IN, C_OUT> {
@@ -28,16 +30,16 @@ public class SequencedCollectionIterationProcessor<C_IN extends SequencedCollect
 			.mapToObj(index -> processElement(index, iter.next()))
 			.toList();
 
-		var failures = resultList.stream()
-			.filter(Result::isFailure)
+		var resultMap = resultList.stream().collect(Collectors.groupingBy(Result::isSuccess));
+
+		var failures = resultMap.getOrDefault(false, List.of()).stream()
 			.map(result -> result.failure.atPath(Path.createIndexPath(result.elemIndex)))
 			.toList();
 		if (!failures.isEmpty()) {
 			return ProcessResult.failure(new ProcessFailure.MultiFailure(failures));
 		}
 
-		var newCollection = resultList.stream()
-			.filter(Result::isSuccess)
+		var newCollection = resultMap.getOrDefault(true, List.of()).stream()
 			.map(Result::value)
 			.collect(collector);
 		return ProcessResult.success(newCollection);
@@ -47,10 +49,6 @@ public class SequencedCollectionIterationProcessor<C_IN extends SequencedCollect
 
 		public boolean isSuccess() {
 			return failure == null;
-		}
-
-		public boolean isFailure() {
-			return failure != null;
 		}
 
 	}
