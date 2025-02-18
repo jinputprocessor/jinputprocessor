@@ -60,7 +60,7 @@ jobs:
       - name: Bump to next SNAPSHOT version
         run: |
           NEXT_VERSION=$(echo ${{ env.RELEASE_VERSION }} | awk -F. '{print $1"."$2"."$3+1"-SNAPSHOT"}')
-          mvn versions:set -DnewVersion=$NEXT_VERSION -pl jinputprocessor-core -am
+          mvn versions:set -DnewVersion=$NEXT_VERSION -am
           git commit -am "Set version to $NEXT_VERSION"
           git push origin HEAD:main
         env:
