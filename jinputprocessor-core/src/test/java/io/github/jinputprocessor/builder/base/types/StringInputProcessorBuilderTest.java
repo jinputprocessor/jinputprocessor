@@ -27,7 +27,13 @@ class StringInputProcessorBuilderTest {
 					// Test description, sanitizerCustomizer, input, expectedOutput
 					Arguments.of("strip", build(builder -> builder.strip()), " value ", "value"),
 					Arguments.of("toLowerCase", build(builder -> builder.toLowerCase()), "THIS IS Éé", "this is éé"),
-					Arguments.of("toUpperCase", build(builder -> builder.toUpperCase()), "this is Éé", "THIS IS ÉÉ")
+					Arguments.of("toUpperCase", build(builder -> builder.toUpperCase()), "this is Éé", "THIS IS ÉÉ"),
+					Arguments.of("prefix-nominal", build(builder -> builder.prefix("p-")), "value", "p-value"),
+					Arguments.of("prefix-already-prefixed", build(builder -> builder.prefix("p-")), "p-value", "p-value"),
+					Arguments.of("prefix-already-prefixedUppercase", build(builder -> builder.prefix("p-")), "P-value", "p-P-value"),
+					Arguments.of("suffix-nominal", build(builder -> builder.suffix("-s")), "value", "value-s"),
+					Arguments.of("suffix-already-suffixed", build(builder -> builder.suffix("-s")), "value-s", "value-s"),
+					Arguments.of("suffix-already-suffixedUppercase", build(builder -> builder.suffix("-s")), "value-S", "value-S-s")
 				);
 			}
 
