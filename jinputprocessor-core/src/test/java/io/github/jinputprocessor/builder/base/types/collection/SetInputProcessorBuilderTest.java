@@ -88,7 +88,7 @@ class SetInputProcessorBuilderTest {
 			void sanitization_all_success() {
 				var itemProcessor = InputProcessor.builder().forString().sanitize().strip().then().build();
 				var setProcessor = InputProcessor.builder().forSet(String.class)
-					.processEach(/*NullStrategy.removeNulls()*/ itemProcessor)
+					.processEach(itemProcessor)
 					.build();
 
 				var actualResult = setProcessor.process(Set.of("", " ", " a", "b ", " c "));
@@ -101,7 +101,7 @@ class SetInputProcessorBuilderTest {
 			void sanitization_all_success_withCollector() {
 				var itemProcessor = InputProcessor.builder().forString().sanitize().strip().then().build();
 				var setProcessor = InputProcessor.builder().forSet(String.class)
-					.processEach(/*NullStrategy.removeNulls()*/ itemProcessor, Collectors.toCollection(() -> new HashSet<>()))
+					.processEach(itemProcessor, Collectors.toCollection(() -> new HashSet<>()))
 					.build();
 
 				var actualResult = setProcessor.process(Set.of("", " ", " a", "b ", " c "));
@@ -122,7 +122,7 @@ class SetInputProcessorBuilderTest {
 			void validation_all_success() {
 				var itemProcessor = InputProcessor.builder().forString().validateThat().isNotNull().then().build();
 				var setProcessor = InputProcessor.builder().forSet(String.class)
-					.processEach(/*NullStrategy.removeNulls()*/ itemProcessor)
+					.processEach(itemProcessor)
 					.build();
 
 				var actualResult = setProcessor.process(Set.of("", " ", " a", "b ", " c "));
@@ -135,7 +135,7 @@ class SetInputProcessorBuilderTest {
 			void validation_fail() {
 				var itemProcessor = InputProcessor.builder().forString().validateThat().isNotEmpty().then().build();
 				var setProcessor = InputProcessor.builder().forSet(String.class)
-					.processEach(/*NullStrategy.removeNulls()*/ itemProcessor)
+					.processEach(itemProcessor)
 					.build();
 
 				var actualResult = setProcessor.process(Set.of("", "abc", "123"));
@@ -153,7 +153,7 @@ class SetInputProcessorBuilderTest {
 			void validation_fail_atPath() {
 				var itemProcessor = InputProcessor.builder().forString().validateThat().isNotEmpty().then().build();
 				var setProcessor = InputProcessor.builder().forSet(String.class)
-					.processEach(/*NullStrategy.removeNulls()*/ itemProcessor)
+					.processEach(itemProcessor)
 					.build();
 
 				var actualResult = setProcessor.process(Set.of("", "abc", "123")).atPath(Path.createPropertyPath("mySet"));
@@ -176,7 +176,7 @@ class SetInputProcessorBuilderTest {
 			void mapping_all_success() {
 				var itemProcessor = InputProcessor.builder().forString().mapToInteger().build();
 				var setProcessor = InputProcessor.builder().forSet(String.class)
-					.processEach(/*NullStrategy.removeNulls()*/ itemProcessor)
+					.processEach(itemProcessor)
 					.build();
 
 				var actualResult = setProcessor.process(Set.of("0", "1", "2"));

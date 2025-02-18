@@ -69,12 +69,6 @@ class StringInputProcessorBuilderTest {
 				.build();
 
 			@Test
-			void when_null_then_failure() {
-//				TODO var actual = PROCESSOR.process(null);
-//				ProcessResultAssert.assertThat(actual).isFailureWithValidationFailure(new ObjectIsNull());
-			}
-
-			@Test
 			void when_empty_then_success() {
 				var actual = PROCESSOR.process("");
 				ProcessResultAssert.assertThat(actual).isSuccessWithValue("");
@@ -102,12 +96,6 @@ class StringInputProcessorBuilderTest {
 				.build();
 
 			@Test
-			void when_null_then_failure() {
-//				TODO var actual = processor.process(null);
-//				ProcessResultAssert.assertThat(actual).isFailureWithValidationFailure(new ObjectIsNull());
-			}
-
-			@Test
 			void when_shorter_then_success() {
 				var actual = PROCESSOR.process("1234");
 				ProcessResultAssert.assertThat(actual).isSuccessWithValue("1234");
@@ -133,11 +121,6 @@ class StringInputProcessorBuilderTest {
 			private static final InputProcessor<String, String> PROCESSOR = InputProcessor.builder().forString()
 				.validateThat().canBeParsedToInteger().then()
 				.build();
-
-			@Test
-			void when_null_then_failure() {
-//				TODO
-			}
 
 			@Test
 			void when_negative_then_success() {
@@ -204,12 +187,6 @@ class StringInputProcessorBuilderTest {
 			static final InputProcessor<String, Integer> PROCESSOR = InputProcessor.builder().forString().mapToInteger().build();
 
 			@Test
-			void when_null_then_failure() {
-//				TODO var actual = processor.process(null);
-//				ProcessResultAssert.assertThat(actual).isFailureWithValidationFailure(new ObjectIsNull());
-			}
-
-			@Test
 			void when_negative_then_success() {
 				var actual = PROCESSOR.process("-1");
 				ProcessResultAssert.assertThat(actual).isSuccessWithValue(-1);
@@ -267,12 +244,6 @@ class StringInputProcessorBuilderTest {
 		class MapToLong {
 
 			static final InputProcessor<String, Long> PROCESSOR = InputProcessor.builder().forString().mapToLong().build();
-
-			@Test
-			void when_null_then_failure() {
-//				TODO var actual = processor.process(null);
-//				ProcessResultAssert.assertThat(actual).isFailureWithValidationFailure(new ObjectIsNull());
-			}
 
 			@Test
 			void when_negative_then_success() {

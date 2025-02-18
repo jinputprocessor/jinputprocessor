@@ -93,7 +93,7 @@ class ListInputProcessorBuilderTest {
 			void sanitization_all_success() {
 				var itemProcessor = InputProcessor.builder().forString().sanitize().strip().then().build();
 				var listProcessor = InputProcessor.builder().forList(String.class)
-					.processEach(/*NullStrategy.removeNulls()*/ itemProcessor)
+					.processEach(itemProcessor)
 					.build();
 
 				var actualResult = listProcessor.process(List.of("", " ", " a", "b ", " c "));
@@ -109,7 +109,7 @@ class ListInputProcessorBuilderTest {
 			void sanitization_all_success_withCollector() {
 				var itemProcessor = InputProcessor.builder().forString().sanitize().strip().then().build();
 				var listProcessor = InputProcessor.builder().forList(String.class)
-					.processEach(/*NullStrategy.removeNulls()*/ itemProcessor, Collectors.toCollection(() -> new LinkedList<>()))
+					.processEach(itemProcessor, Collectors.toCollection(() -> new LinkedList<>()))
 					.build();
 
 				var actualResult = listProcessor.process(List.of("", " ", " a", "b ", " c "));
@@ -130,7 +130,7 @@ class ListInputProcessorBuilderTest {
 			void validation_all_success() {
 				var itemProcessor = InputProcessor.builder().forString().validateThat().isNotNull().then().build();
 				var listProcessor = InputProcessor.builder().forList(String.class)
-					.processEach(/*NullStrategy.removeNulls()*/ itemProcessor)
+					.processEach(itemProcessor)
 					.build();
 
 				var actualResult = listProcessor.process(List.of("", " ", " a", "b ", " c "));
@@ -146,7 +146,7 @@ class ListInputProcessorBuilderTest {
 			void validation_fail() {
 				var itemProcessor = InputProcessor.builder().forString().validateThat().isNotEmpty().then().build();
 				var listProcessor = InputProcessor.builder().forList(String.class)
-					.processEach(/*NullStrategy.removeNulls()*/ itemProcessor)
+					.processEach(itemProcessor)
 					.build();
 
 				var actualResult = listProcessor.process(List.of("", "abc", "", "123", ""));
@@ -166,7 +166,7 @@ class ListInputProcessorBuilderTest {
 			void validation_fail_atPath() {
 				var itemProcessor = InputProcessor.builder().forString().validateThat().isNotEmpty().then().build();
 				var listProcessor = InputProcessor.builder().forList(String.class)
-					.processEach(/*NullStrategy.removeNulls()*/ itemProcessor)
+					.processEach(itemProcessor)
 					.build();
 
 				var actualResult = listProcessor.process(List.of("", "abc", "", "123", "")).atPath(Path.createPropertyPath("myList"));
@@ -191,7 +191,7 @@ class ListInputProcessorBuilderTest {
 			void mapping_all_success() {
 				var itemProcessor = InputProcessor.builder().forString().mapToInteger().build();
 				var listProcessor = InputProcessor.builder().forList(String.class)
-					.processEach(/*NullStrategy.removeNulls()*/ itemProcessor)
+					.processEach(itemProcessor)
 					.build();
 
 				var actualResult = listProcessor.process(List.of("0", "1", "2"));

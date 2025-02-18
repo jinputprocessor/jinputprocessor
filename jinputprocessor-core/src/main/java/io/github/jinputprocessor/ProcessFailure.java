@@ -104,10 +104,10 @@ public sealed interface ProcessFailure {
 		// ===========================================================================
 		// NUMBER
 
-		record NumberIsNotGreaterThan<T extends Number>(T ref) implements ValidationFailure {
+		record NumberIsLowerOrEqualTo<T extends Number>(T ref) implements ValidationFailure {
 		}
 
-		record NumberIsNotGreaterOrEqualTo<T extends Number>(T ref) implements ValidationFailure {
+		record NumberIsLowerThan<T extends Number>(T ref) implements ValidationFailure {
 		}
 
 		// ===========================================================================

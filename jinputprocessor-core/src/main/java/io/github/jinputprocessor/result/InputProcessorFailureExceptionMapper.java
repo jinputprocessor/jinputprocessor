@@ -49,10 +49,10 @@ public class InputProcessorFailureExceptionMapper implements ProcessFailureMappe
 			case ValidationFailure.StringIsTooLong err -> "must be " + err.maxLength() + " chars max, but is " + err.currentLength();
 			case ValidationFailure.StringIsNotParseableToInteger err -> "is not parseable to Integer";
 
-			case ValidationFailure.NumberIsNotGreaterThan<?> err -> "must be greater than " + err.ref();
-			case ValidationFailure.NumberIsNotGreaterOrEqualTo<?> err -> "must be greater or equal to " + err.ref();
+			case ValidationFailure.NumberIsLowerOrEqualTo<?> err -> "must be greater than " + err.ref();
+			case ValidationFailure.NumberIsLowerThan<?> err -> "must be greater or equal to " + err.ref();
 
-			case ValidationFailure.CollectionIsEmpty err -> "collection is empty";
+			case ValidationFailure.CollectionIsEmpty err -> "is empty";
 
 			case ValidationFailure.CustomValidationFailure err -> err.toString();
 		};
