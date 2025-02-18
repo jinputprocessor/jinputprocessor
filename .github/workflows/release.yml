@@ -45,7 +45,7 @@ jobs:
         run: mvn clean test
 
       - name: Build and package core module
-        run: mvn clean install -pl jinputprocessor- -am
+        run: mvn clean install -pl jinputprocessor-core -am
 
       - name: Publish core module to Maven Central
         run: mvn -P release --batch-mode deploy -pl jinputprocessor-core -am -DskipTests
