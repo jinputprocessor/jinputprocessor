@@ -40,9 +40,7 @@ jobs:
 
       - name: Publish core module to Maven Central
         run: |
-          cd jinputprocessor-core
-          mvn -P release --batch-mode deploy -am -DskipTests
-          cd ..
+          mvn -P release --batch-mode deploy -am -DskipTests -pl jinputprocessor-core
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
