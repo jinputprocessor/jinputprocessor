@@ -32,15 +32,6 @@ jobs:
       - name: Update pom.xml version
         run: mvn versions:set -DnewVersion=${{ env.RELEASE_VERSION }} -pl jinputprocessor-core -am
 
-      - name: Commit version change
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git commit -am "Set version to ${{ env.RELEASE_VERSION }}"
-          git push origin HEAD:main  # Push the updated version back to main
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Run tests
         run: mvn clean test
 
