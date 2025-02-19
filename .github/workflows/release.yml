@@ -32,6 +32,15 @@ jobs:
       - name: Update pom.xml version
         run: mvn versions:set -DnewVersion=${{ env.RELEASE_VERSION }} -pl jinputprocessor-core -am
 
+      - name: Commit version change
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git commit -am "Set version to ${{ env.RELEASE_VERSION }}"
+          git push origin HEAD:main  # Push the updated version back to main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Run tests
         run: mvn clean test
 
@@ -48,6 +57,8 @@ jobs:
 
       - name: Bump to next SNAPSHOT version
         run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
           NEXT_VERSION=$(echo ${{ env.RELEASE_VERSION }} | awk -F. '{print $1"."$2"."$3+1"-SNAPSHOT"}')
           mvn versions:set -DnewVersion=$NEXT_VERSION -am
           git commit -am "Set version to $NEXT_VERSION"
