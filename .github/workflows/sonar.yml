@@ -18,9 +18,9 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: Run SonarQube
-        run: mvn clean verify sonar:sonar -Dsonar.projectKey=YOUR_PROJECT_KEY
+        run: mvn clean verify sonar:sonar -pl jinputprocessor-core -am -Dsonar.projectKey=jinputprocessor_jinputprocessor 
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

@@ -4,10 +4,36 @@
 
 	<groupId>io.github.jinputprocessor</groupId>
 	<artifactId>jinputprocessor</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.7-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
+	<name>JInputProcessor</name>
+	<description>A Java library to sanitize, validate, transform inputs.</description>
+	<url>https://github.com/jinputprocessor/jinputprocessor</url>
+
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Samuel SCHNEGG</name>
+			<email>samuel.schnegg@gmail.com</email>
+			<organization>JInputProcessor</organization>
+			<organizationUrl>https://github.com/ComputerDaddyGuy</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git://github.com/jinputprocessor/jinputprocessor.git</connection>
+		<developerConnection>scm:git:ssh://github.com:jinputprocessor/jinputprocessor.git</developerConnection>
+		<url>https://github.com/jinputprocessor/jinputprocessor/tree/main</url>
+	</scm>
+	
 	<modules>
 		<module>jinputprocessor-core</module>
 		<module>jinputprocessor-examples</module>
@@ -24,8 +50,12 @@
 		<assertj.version>3.27.3</assertj.version>
 		<archunit.version>1.0.1</archunit.version>
 
+		<central-publishing-maven-plugin.version>0.7.0</central-publishing-maven-plugin.version>
+		<maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+		<maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
 		<maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
 		<maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
+		<maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
 		<maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
 		<license-maven-plugin.version>2.5.0</license-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
@@ -198,5 +228,77 @@
 			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.sonatype.central</groupId>
+						<artifactId>central-publishing-maven-plugin</artifactId>
+						<version>${central-publishing-maven-plugin.version}</version>
+						<extensions>true</extensions>
+						<configuration>
+							<publishingServerId>central</publishingServerId>
+							<tokenAuth>true</tokenAuth>
+							<autoPublish>true</autoPublish>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>${maven-source-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>${maven-javadoc-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>attach-javadoc</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<stylesheet>java</stylesheet>
+							<doclint>none</doclint>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>${maven-gpg-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<gpgArguments>
+								<arg>--pinentry-mode</arg>
+								<arg>loopback</arg>
+							</gpgArguments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
