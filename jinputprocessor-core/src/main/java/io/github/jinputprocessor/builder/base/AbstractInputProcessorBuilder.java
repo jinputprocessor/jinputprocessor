@@ -8,12 +8,13 @@ import io.github.jinputprocessor.builder.base.types.ObjectInputProcessorBuilder;
 import jakarta.annotation.Nonnull;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public abstract class AbstractInputProcessorBuilder<IN, OUT, SELF extends AbstractInputProcessorBuilder<IN, OUT, SELF>> implements InputProcessorBuilder<IN, OUT, SELF> {
 
 	private final @Nonnull InputProcessor<IN, OUT> process;
 
-	public AbstractInputProcessorBuilder(InputProcessor<IN, OUT> previous) {
+	protected AbstractInputProcessorBuilder(InputProcessor<IN, OUT> previous) {
 		this.process = Objects.requireNonNull(previous);
 	}
 
@@ -24,7 +25,7 @@ public abstract class AbstractInputProcessorBuilder<IN, OUT, SELF extends Abstra
 	}
 
 	@Override
-	public SELF sanitize(Function<OUT, OUT> sanitizationFunction) {
+	public SELF sanitize(UnaryOperator<OUT> sanitizationFunction) {
 		return apply(InputProcessors.sanitizationProcessor(sanitizationFunction));
 	}
 
@@ -40,9 +41,10 @@ public abstract class AbstractInputProcessorBuilder<IN, OUT, SELF extends Abstra
 
 	protected abstract SELF newInstance(InputProcessor<IN, OUT> process);
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public <NEW_OUT> InputProcessorBuilder<IN, NEW_OUT, ?> map(Function<OUT, NEW_OUT> mappingFunction) {
-		return map(mappingFunction, ObjectInputProcessorBuilder::new);
+	public <NEW_OUT, B extends InputProcessorBuilder<IN, NEW_OUT, B>> InputProcessorBuilder<IN, NEW_OUT, B> map(Function<OUT, NEW_OUT> mappingFunction) {
+		return (InputProcessorBuilder<IN, NEW_OUT, B>) map(mappingFunction, ObjectInputProcessorBuilder::new);
 	}
 
 	@Override

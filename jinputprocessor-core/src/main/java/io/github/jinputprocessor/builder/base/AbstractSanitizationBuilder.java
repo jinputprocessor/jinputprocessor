@@ -1,12 +1,12 @@
 package io.github.jinputprocessor.builder.base;
 
 import io.github.jinputprocessor.builder.InputProcessorBuilder;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public abstract class AbstractSanitizationBuilder<IN, T, B extends InputProcessorBuilder<IN, T, B>, SELF extends AbstractSanitizationBuilder<IN, T, B, SELF>>
 	extends AbstractIntermediateBuilder<IN, T, B, SELF> {
 
-	public AbstractSanitizationBuilder(B builder) {
+	protected AbstractSanitizationBuilder(B builder) {
 		super(builder);
 	}
 
@@ -21,7 +21,7 @@ public abstract class AbstractSanitizationBuilder<IN, T, B extends InputProcesso
 	 * 
 	 * @return this sanitization builder
 	 */
-	public SELF apply(Function<T, T> function) {
+	public SELF apply(UnaryOperator<T> function) {
 		builder = builder.sanitize(function);
 		return cast();
 	}

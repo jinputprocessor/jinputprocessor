@@ -6,6 +6,7 @@ import io.github.jinputprocessor.ProcessFailure.ValidationFailure;
 import io.github.jinputprocessor.builder.base.NullStrategyBuilder;
 import jakarta.annotation.Nonnull;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
  * @param <IN>
@@ -36,7 +37,7 @@ public interface InputProcessorBuilder<IN, OUT, SELF extends InputProcessorBuild
 	 * @return	a new builder
 	 */
 	@Nonnull
-	SELF sanitize(@Nonnull Function<OUT, OUT> sanitizationFunction);
+	SELF sanitize(@Nonnull UnaryOperator<OUT> sanitizationFunction);
 
 	/**
 	 * Validate the value using the given validation function.
@@ -70,7 +71,7 @@ public interface InputProcessorBuilder<IN, OUT, SELF extends InputProcessorBuild
 	 * @return	a new builder
 	 */
 	@Nonnull
-	<NEW_OUT> InputProcessorBuilder<IN, NEW_OUT, ?> map(@Nonnull Function<OUT, NEW_OUT> mappingFunction);
+	<NEW_OUT, B extends InputProcessorBuilder<IN, NEW_OUT, B>> InputProcessorBuilder<IN, NEW_OUT, B> map(@Nonnull Function<OUT, NEW_OUT> mappingFunction);
 
 	/**
 	 * Map the output value of this processor into another type, and return a new {@link InputProcessorBuilder} for this new type,

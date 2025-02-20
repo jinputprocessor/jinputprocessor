@@ -26,7 +26,7 @@ public class ValidationProcessor<T> implements InputProcessor<T, T> {
 			return failure == null
 				? ProcessResult.success(value)
 				: ProcessResult.failure(failure);
-		} catch (Throwable t) {
+		} catch (Exception t) {
 			return ProcessResult.failure(new ProcessFailure.UnexpectedException(value, t));
 		}
 	}

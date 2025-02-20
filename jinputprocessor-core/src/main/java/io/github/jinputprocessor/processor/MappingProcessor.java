@@ -20,7 +20,7 @@ public class MappingProcessor<OUT, NEW_OUT> implements InputProcessor<OUT, NEW_O
 		try {
 			NEW_OUT outValue = mappingFunction.apply(value);
 			return ProcessResult.success(outValue);
-		} catch (Throwable t) {
+		} catch (Exception t) {
 			return ProcessResult.failure(new ProcessFailure.UnexpectedException(value, t));
 		}
 	}

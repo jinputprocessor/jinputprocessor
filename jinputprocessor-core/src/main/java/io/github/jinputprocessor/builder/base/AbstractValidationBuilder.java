@@ -6,7 +6,7 @@ import io.github.jinputprocessor.builder.InputProcessorBuilder;
 public abstract class AbstractValidationBuilder<IN, T, B extends InputProcessorBuilder<IN, T, B>, SELF extends AbstractValidationBuilder<IN, T, B, SELF>>
 	extends AbstractIntermediateBuilder<IN, T, B, SELF> {
 
-	public AbstractValidationBuilder(B builder) {
+	protected AbstractValidationBuilder(B builder) {
 		super(builder);
 	}
 

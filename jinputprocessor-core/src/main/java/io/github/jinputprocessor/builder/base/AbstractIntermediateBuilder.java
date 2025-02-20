@@ -15,7 +15,7 @@ abstract class AbstractIntermediateBuilder<IN, T, B extends InputProcessorBuilde
 
 	protected B builder;
 
-	public AbstractIntermediateBuilder(B builder) {
+	protected AbstractIntermediateBuilder(B builder) {
 		super();
 		this.builder = Objects.requireNonNull(builder);
 	}

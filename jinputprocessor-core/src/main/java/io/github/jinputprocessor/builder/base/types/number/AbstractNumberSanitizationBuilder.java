@@ -14,9 +14,7 @@ import io.github.jinputprocessor.builder.base.AbstractSanitizationBuilder;
 public abstract class AbstractNumberSanitizationBuilder<IN, T extends Number, B extends InputProcessorBuilder<IN, T, B>, SELF extends AbstractNumberSanitizationBuilder<IN, T, B, SELF>>
 	extends AbstractSanitizationBuilder<IN, T, B, SELF> {
 
-	protected B builder;
-
-	public AbstractNumberSanitizationBuilder(B builder) {
+	protected AbstractNumberSanitizationBuilder(B builder) {
 		super(builder);
 	}
 

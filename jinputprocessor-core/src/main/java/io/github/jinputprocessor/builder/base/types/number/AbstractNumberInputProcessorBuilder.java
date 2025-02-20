@@ -6,7 +6,7 @@ import io.github.jinputprocessor.builder.base.AbstractInputProcessorBuilder;
 public abstract class AbstractNumberInputProcessorBuilder<IN, N extends Number, SELF extends AbstractNumberInputProcessorBuilder<IN, N, SELF>>
 	extends AbstractInputProcessorBuilder<IN, N, SELF> {
 
-	public AbstractNumberInputProcessorBuilder(InputProcessor<IN, N> previous) {
+	protected AbstractNumberInputProcessorBuilder(InputProcessor<IN, N> previous) {
 		super(previous);
 	}
 
