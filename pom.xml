@@ -6,7 +6,7 @@
 	<artifactId>jinputprocessor</artifactId>
 	<version>0.0.7-SNAPSHOT</version>
 
-	<packaging>pom</packaging>
+	<packaging>jar</packaging>
 
 	<name>JInputProcessor</name>
 	<description>A Java library to sanitize, validate, transform inputs.</description>
@@ -24,7 +24,7 @@
 			<name>Samuel SCHNEGG</name>
 			<email>samuel.schnegg@gmail.com</email>
 			<organization>JInputProcessor</organization>
-			<organizationUrl>https://github.com/ComputerDaddyGuy</organizationUrl>
+			<organizationUrl>https://github.com/jinputprocessor</organizationUrl>
 		</developer>
 	</developers>
 
@@ -33,11 +33,6 @@
 		<developerConnection>scm:git:ssh://github.com:jinputprocessor/jinputprocessor.git</developerConnection>
 		<url>https://github.com/jinputprocessor/jinputprocessor/tree/main</url>
 	</scm>
-
-	<modules>
-		<module>jinputprocessor-core</module>
-		<module>jinputprocessor-examples</module>
-	</modules>
 
 	<properties>
 		<java.version>21</java.version>
@@ -72,100 +67,91 @@
 		<license.licenseName>apache_v2</license.licenseName>
 	</properties>
 
-	<dependencyManagement>
-		<dependencies>
 
-			<dependency>
-				<groupId>jakarta.annotation</groupId>
-				<artifactId>jakarta.annotation-api</artifactId>
-				<version>${jakarta.annotation.version}</version>
-				<scope>provided</scope>
-			</dependency>
+	<dependencies>
+		<dependency>
+			<groupId>jakarta.annotation</groupId>
+			<artifactId>jakarta.annotation-api</artifactId>
+			<version>${jakarta.annotation.version}</version>
+			<scope>provided</scope>
+		</dependency>
 
-			<dependency>
-				<groupId>org.junit.jupiter</groupId>
-				<artifactId>junit-jupiter-engine</artifactId>
-				<version>${junit-jupiter.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.junit.jupiter</groupId>
-				<artifactId>junit-jupiter-params</artifactId>
-				<version>${junit-jupiter.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.assertj</groupId>
-				<artifactId>assertj-core</artifactId>
-				<version>${assertj.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.tngtech.archunit</groupId>
-				<artifactId>archunit</artifactId>
-				<version>${archunit.version}</version>
-				<scope>test</scope>
-			</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit-jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<version>${junit-jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>${assertj.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.tngtech.archunit</groupId>
+			<artifactId>archunit</artifactId>
+			<version>${archunit.version}</version>
+			<scope>test</scope>
+		</dependency>
 
-		</dependencies>
+	</dependencies>
 
-	</dependencyManagement>
 
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>${maven-surefire-plugin.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>${maven-compiler-plugin.version}</version> <!-- Ensure you're using a recent version -->
-					<configuration>
-						<source>${java.version}</source>
-						<target>${java.version}</target>
-					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-deploy-plugin</artifactId>
-					<version>${maven-deploy-plugin.version}</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>license-maven-plugin</artifactId>
-					<version>${license-maven-plugin.version}</version>
-					<executions>
-						<execution>
-							<id>first</id>
-							<goals>
-								<goal>update-file-header</goal>
-							</goals>
-							<phase>process-sources</phase>
-						</execution>
-					</executions>
-					<configuration>
-						<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
-						<licenseName>apache_v2</licenseName>
-						<roots>
-							<root>src/main/java</root>
-							<root>src/test</root>
-						</roots>
-						<processStartTag>============================ LICENSE_START =============================</processStartTag>
-						<sectionDelimiter>----------</sectionDelimiter>
-						<useJavaNoReformatCommentStartTag>false</useJavaNoReformatCommentStartTag>
-						<processEndTag>============================== LICENSE_END ===============================</processEndTag>
-					</configuration>
-				</plugin>
-
-			</plugins>
-		</pluginManagement>
 
 		<plugins>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>${license-maven-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>first</id>
+						<goals>
+							<goal>update-file-header</goal>
+						</goals>
+						<phase>process-sources</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+					<licenseName>apache_v2</licenseName>
+					<roots>
+						<root>src/main/java</root>
+						<root>src/test</root>
+					</roots>
+					<processStartTag>============================ LICENSE_START =============================</processStartTag>
+					<sectionDelimiter>----------</sectionDelimiter>
+					<useJavaNoReformatCommentStartTag>false</useJavaNoReformatCommentStartTag>
+					<processEndTag>============================== LICENSE_END ===============================</processEndTag>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven-surefire-plugin.version}</version>
+			</plugin>
+
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
@@ -195,6 +181,12 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>${maven-deploy-plugin.version}</version>
 			</plugin>
 
 		</plugins>

@@ -15,12 +15,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
 
       - name: Run SonarQube
-        run: mvn clean verify sonar:sonar -pl jinputprocessor-core -am -Dsonar.projectKey=jinputprocessor_jinputprocessor 
+        run: mvn clean verify sonar:sonar -Dsonar.projectKey=jinputprocessor_jinputprocessor 
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

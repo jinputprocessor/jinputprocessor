@@ -30,7 +30,7 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Update pom.xml version
-        run: mvn versions:set -DnewVersion=${{ env.RELEASE_VERSION }} -pl jinputprocessor-core -am
+        run: mvn versions:set -DnewVersion=${{ env.RELEASE_VERSION }}
 
       - name: Commit version change
         run: |
@@ -45,11 +45,11 @@ jobs:
         run: mvn clean test
 
       - name: Build and package core module
-        run: mvn clean install -pl jinputprocessor-core -am
+        run: mvn clean install
 
       - name: Publish core module to Maven Central
         run: |
-          mvn -P release --batch-mode deploy -am -DskipTests -pl jinputprocessor-core
+          mvn -P release --batch-mode deploy -am -DskipTests
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}

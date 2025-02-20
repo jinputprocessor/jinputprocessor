@@ -1,32 +1,22 @@
 package io.github.jinputprocessor.examples;
 
 import io.github.jinputprocessor.InputProcessor;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class ValueObject {
+/**
+ * In this example, we try to build various "LastName" value objects,
+ * using the LastName.PROCESSOR instanciated below.
+ */
+class ValueObjectTest {
 
-	public static void main(String[] args) {
-		/*
-		 * In this example, we try to build various "LastName" value objects,
-		 * using the LastName.PROCESSOR instanciated below.
-		 */
-		processAndPrint(null); // "N/A"
-		processAndPrint(" Smith  "); // "SMITH"
-		processAndPrint("DOE"); // "DOE"
-		processAndPrint(""); // IllegalArgumentException: must not be empty
-		processAndPrint("ThisIsAWayTooLongLastName"); // IllegalArgumentException: must be 20 chars max, but is 25
-	}
-
-	private static void processAndPrint(String value) {
-		try {
-			var lastName = LastName.of(value);
-			printFormatted(value, lastName.toString());
-		} catch (IllegalArgumentException e) {
-			printFormatted(value, e.getMessage());
-		}
-	}
-
-	private static void printFormatted(String before, String after) {
-		System.out.println((before == null ? "null" : "'" + before + "'") + " --> " + "'" + after + "'");
+	@Test
+	void test_examples() {
+		Assertions.assertThat(LastName.of(null).toString()).isEqualTo("N/A");
+		Assertions.assertThat(LastName.of(" Smith  ").toString()).isEqualTo("SMITH");
+		Assertions.assertThat(LastName.of("DOE").toString()).isEqualTo("DOE");
+		Assertions.assertThatIllegalArgumentException().isThrownBy(() -> LastName.of("")).withMessageContaining("must not be empty");
+		Assertions.assertThatIllegalArgumentException().isThrownBy(() -> LastName.of("ThisIsAWayTooLongLastName")).withMessageContaining(" must be 20 chars max, but is 25");
 	}
 
 	/**
