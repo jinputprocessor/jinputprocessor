@@ -10,7 +10,7 @@ import java.util.stream.Collector;
 public abstract class AbstractCollectionInputProcessorBuilder<IN, C extends Collection<T>, T, SELF extends AbstractCollectionInputProcessorBuilder<IN, C, T, SELF>>
 	extends AbstractInputProcessorBuilder<IN, C, SELF> {
 
-	public AbstractCollectionInputProcessorBuilder(InputProcessor<IN, C> previous) {
+	protected AbstractCollectionInputProcessorBuilder(InputProcessor<IN, C> previous) {
 		super(previous);
 	}
 

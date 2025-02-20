@@ -17,9 +17,8 @@ public class NullStrategyProcessor<IN, OUT> implements InputProcessor<IN, OUT> {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public <NEW_OUT> InputProcessor<IN, NEW_OUT> andThen(InputProcessor<OUT, NEW_OUT> after) {
-		if (after instanceof NullStrategyProcessor nullStrategyProcessor) {
+		if (after instanceof NullStrategyProcessor<OUT, NEW_OUT> nullStrategyProcessor) {
 			return new ChainedProcessor<>(this, nullStrategyProcessor);
 		}
 		return new NullStrategyProcessor<>(strategy, nextProcessor.andThen(after));
@@ -28,10 +27,10 @@ public class NullStrategyProcessor<IN, OUT> implements InputProcessor<IN, OUT> {
 	@Override
 	public ProcessResult<OUT> process(IN value) {
 		return switch (strategy) {
-			case Process<?> str -> nextProcessor.process(value);
-			case SkipProcess<?> str -> value == null ? ProcessResult.success(null) : nextProcessor.process(value);
-			case Fail<?> str -> value == null ? ProcessResult.failure(str.failure()) : nextProcessor.process(value);
-			case UseDefault<IN> str -> value == null ? nextProcessor.process(str.value()) : nextProcessor.process(value);
+			case Process<IN> str -> nextProcessor.process(value);
+			case SkipProcess<IN> str -> value == null ? ProcessResult.success(null) : nextProcessor.process(value);
+			case Fail<IN>(var failure) -> value == null ? ProcessResult.failure(failure) : nextProcessor.process(value);
+			case UseDefault<IN>(var defaultValue) -> value == null ? nextProcessor.process(defaultValue) : nextProcessor.process(value);
 		};
 	}
 

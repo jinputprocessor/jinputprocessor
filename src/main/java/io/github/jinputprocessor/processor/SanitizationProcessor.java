@@ -20,7 +20,7 @@ public class SanitizationProcessor<IN, OUT> implements InputProcessor<IN, OUT> {
 		try {
 			OUT newValue = sanitizationFunction.apply(value);
 			return ProcessResult.success(newValue);
-		} catch (Throwable t) {
+		} catch (Exception t) {
 			return ProcessResult.failure(new ProcessFailure.UnexpectedException(value, t));
 		}
 	}

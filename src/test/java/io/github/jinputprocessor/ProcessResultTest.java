@@ -170,59 +170,59 @@ class ProcessResultTest {
 	class Equality {
 
 		@Test
-		void when_onSameNull_then_false() {
+		void test_equals_and_hash_code_onNull() {
 			Assertions.assertThat(SUCCESS_WITH_NULL).isNotEqualTo(null);
 			Assertions.assertThat(SUCCESS_WITH_ANY).isNotEqualTo(null);
 			Assertions.assertThat(FAILURE_WITH_ANY).isNotEqualTo(null);
 		}
 
 		@Test
-		void when_onOtherObjectType_then_false() {
+		void test_equals_and_hash_code_onOtherObjectType() {
 			Assertions.assertThat(SUCCESS_WITH_NULL).isNotEqualTo(OBJECT);
 			Assertions.assertThat(SUCCESS_WITH_ANY).isNotEqualTo(OBJECT);
 			Assertions.assertThat(FAILURE_WITH_ANY).isNotEqualTo(OBJECT);
 		}
 
 		@Test
-		void when_onSameObject_then_true() {
-			Assertions.assertThat(SUCCESS_WITH_NULL.hashCode()).isEqualTo(SUCCESS_WITH_NULL.hashCode());
+		void test_equals_and_hash_code_onSameObject() {
+			Assertions.assertThat(SUCCESS_WITH_NULL).hasSameHashCodeAs(SUCCESS_WITH_NULL);
 			Assertions.assertThat(SUCCESS_WITH_NULL).isEqualTo(SUCCESS_WITH_NULL);
 
-			Assertions.assertThat(SUCCESS_WITH_ANY.hashCode()).isEqualTo(SUCCESS_WITH_ANY.hashCode());
+			Assertions.assertThat(SUCCESS_WITH_ANY).hasSameHashCodeAs(SUCCESS_WITH_ANY);
 			Assertions.assertThat(SUCCESS_WITH_ANY).isEqualTo(SUCCESS_WITH_ANY);
 
-			Assertions.assertThat(FAILURE_WITH_ANY.hashCode()).isEqualTo(FAILURE_WITH_ANY.hashCode());
+			Assertions.assertThat(FAILURE_WITH_ANY).hasSameHashCodeAs(FAILURE_WITH_ANY);
 			Assertions.assertThat(FAILURE_WITH_ANY).isEqualTo(FAILURE_WITH_ANY);
 		}
 
 		@Test
-		void when_onIdenticalObject_then_true() {
+		void test_equals_and_hash_code_onIdenticalObject() {
 			var otherSuccessNull = ProcessResult.success(null);
-			Assertions.assertThat(SUCCESS_WITH_NULL.hashCode()).isEqualTo(otherSuccessNull.hashCode());
+			Assertions.assertThat(SUCCESS_WITH_NULL).hasSameHashCodeAs(otherSuccessNull);
 			Assertions.assertThat(SUCCESS_WITH_NULL).isEqualTo(otherSuccessNull);
 
 			var otherSuccessAnyObject = ProcessResult.success(OBJECT);
-			Assertions.assertThat(SUCCESS_WITH_ANY.hashCode()).isEqualTo(otherSuccessAnyObject.hashCode());
+			Assertions.assertThat(SUCCESS_WITH_ANY).hasSameHashCodeAs(otherSuccessAnyObject);
 			Assertions.assertThat(SUCCESS_WITH_ANY).isEqualTo(otherSuccessAnyObject);
 
 			var otherFailure = ProcessResult.failure(ERROR);
-			Assertions.assertThat(FAILURE_WITH_ANY.hashCode()).isEqualTo(otherFailure.hashCode());
+			Assertions.assertThat(FAILURE_WITH_ANY).hasSameHashCodeAs(otherFailure);
 			Assertions.assertThat(FAILURE_WITH_ANY).isEqualTo(otherFailure);
 
 		}
 
 		@Test
-		void when_notSameSuccessValue_then_false() {
+		void test_equals_and_hash_code_onNotSameSuccessValue() {
 			Assertions.assertThat(SUCCESS_WITH_ANY).isNotEqualTo(SUCCESS_WITH_NULL);
 		}
 
 		@Test
-		void when_notSameStatus_then_false() {
+		void test_equals_and_hash_code_onNotSameStatus() {
 			Assertions.assertThat(SUCCESS_WITH_ANY).isNotEqualTo(FAILURE_WITH_ANY);
 		}
 
 		@Test
-		void when_notSameFailure_then_false() {
+		void test_equals_and_hash_code_onNotSameFailure_() {
 			var otherDifferent = ProcessResult.failure(new ValidationFailure.StringIsEmpty());
 			Assertions.assertThat(FAILURE_WITH_ANY).isNotEqualTo(otherDifferent);
 		}

@@ -43,14 +43,14 @@ public class InputProcessorFailureExceptionMapper implements ProcessFailureMappe
 	private String validationFailureToString(ValidationFailure validationFail) {
 		return switch (validationFail) {
 			case ValidationFailure.ObjectIsNull err -> "must not be null";
-			case ValidationFailure.ObjectIsNotInstanceOf err -> "is not an instance of " + err.clazz();
+			case ValidationFailure.ObjectIsNotInstanceOf(var clazz) -> "is not an instance of " + clazz;
 
 			case ValidationFailure.StringIsEmpty err -> "must not be empty";
-			case ValidationFailure.StringIsTooLong err -> "must be " + err.maxLength() + " chars max, but is " + err.currentLength();
+			case ValidationFailure.StringIsTooLong(var curr, var max) -> "must be " + max + " chars max, but is " + curr;
 			case ValidationFailure.StringIsNotParseableToInteger err -> "is not parseable to Integer";
 
-			case ValidationFailure.NumberIsLowerOrEqualTo<?> err -> "must be greater than " + err.ref();
-			case ValidationFailure.NumberIsLowerThan<?> err -> "must be greater or equal to " + err.ref();
+			case ValidationFailure.NumberIsLowerOrEqualTo<?>(var ref) -> "must be greater than " + ref;
+			case ValidationFailure.NumberIsLowerThan<?>(var ref) -> "must be greater or equal to " + ref;
 
 			case ValidationFailure.CollectionIsEmpty err -> "is empty";
 

@@ -1,6 +1,7 @@
 package io.github.jinputprocessor;
 
 import io.github.jinputprocessor.processor.ValidationProcessor;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
  * 
  * As this interface is sealed, it allows to use switch pattern matching feature with all case covered at compilation time.
  */
-public sealed interface ProcessFailure {
+public sealed interface ProcessFailure extends Serializable {
 
 	default ProcessFailure atPath(Path path) {
 		return new PathFailure(path, this);
