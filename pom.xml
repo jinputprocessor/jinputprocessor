@@ -54,7 +54,6 @@
 		<maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
 		<maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
 		<maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
-		<license-maven-plugin.version>2.5.0</license-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
 
 		<!-- Other properties -->
@@ -107,33 +106,6 @@
 	<build>
 
 		<plugins>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<version>${license-maven-plugin.version}</version>
-				<executions>
-					<execution>
-						<id>first</id>
-						<goals>
-							<goal>update-file-header</goal>
-						</goals>
-						<phase>process-sources</phase>
-					</execution>
-				</executions>
-				<configuration>
-					<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
-					<licenseName>apache_v2</licenseName>
-					<roots>
-						<root>src/main/java</root>
-						<root>src/test</root>
-					</roots>
-					<processStartTag>============================ LICENSE_START =============================</processStartTag>
-					<sectionDelimiter>----------</sectionDelimiter>
-					<useJavaNoReformatCommentStartTag>false</useJavaNoReformatCommentStartTag>
-					<processEndTag>============================== LICENSE_END ===============================</processEndTag>
-				</configuration>
-			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
