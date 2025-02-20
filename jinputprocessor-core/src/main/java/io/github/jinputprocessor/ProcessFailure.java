@@ -1,92 +1,120 @@
 package io.github.jinputprocessor;
 
-import java.util.Collection;
-import java.util.Map;
+import io.github.jinputprocessor.processor.ValidationProcessor;
+import java.util.List;
 
+/**
+ * An Interface regrouping all possible failures of a {@link ProcessResult}.
+ * 
+ * As this interface is sealed, it allows to use switch pattern matching feature with all case covered at compilation time.
+ */
 public sealed interface ProcessFailure {
 
+	default ProcessFailure atPath(Path path) {
+		return new PathFailure(path, this);
+	}
+
+	default Path getPath() {
+		return Path.root();
+	}
+
 	/**
+	 * An unexpected exception that occured within an processor, like a {@link NullPointerException}.
 	 * 
-	 * @param value The value of the input, at the time the exception was thrown
+	 * @param value 		The value of the input, at the time the exception was thrown 
+	 * 						(not necessiraly the initial input value, it may have been transformed/sanitized in between)
 	 * @param exception		The exception
-	 *
 	 */
 	record UnexpectedException(Object value, Throwable exception) implements ProcessFailure {
+
+//		@Override
+//		public final String toString() {
+//			if (exception != null) {
+//				exception.printStackTrace();
+//			}
+//			return "UnexpectedException / value=" + value + " / exception=" + exception;
+//		}
+
 	}
 
 	/**
-	 * 
-	 * 
-	 *
+	 * A failure that occured within a given path.
 	 */
-	record IndexedFailure(int index, ProcessFailure failure) implements ProcessFailure {
+	record PathFailure(Path path, ProcessFailure failure) implements ProcessFailure {
+
+		@Override
+		public ProcessFailure atPath(Path superPath) {
+			return new PathFailure(path.atPath(superPath), failure);
+		}
+
+		@Override
+		public Path getPath() {
+			return path;
+		}
+
 	}
 
 	/**
-	 * 
-	 * 
-	 *
+	 * A failure that regroups multiple other failures (collection, etc.).
 	 */
-	record MultiFailure(Collection<? extends ProcessFailure> failures) implements ProcessFailure {
+	record MultiFailure(List<? extends ProcessFailure> failures) implements ProcessFailure {
+
 	}
 
 	/**
+	 * A failure because of a validation issue. 
+	 * It is again a sealed interface, allowing switch pattern matching for a complete failure handling.
 	 * 
-	 * 
-	 *
+	 * @see ValidationProcessor
 	 */
-	sealed interface ValidationError extends ProcessFailure {
+	sealed interface ValidationFailure extends ProcessFailure {
 
-		/*
-		 * ===========================================================================
-		 * CUSTOM
-		 * ===========================================================================
+		// ===========================================================================
+		// CUSTOM
+
+		/**
+		 * Extend this interface to declare your own custom validation failures.
+		 * See online documentation and examples for more.
 		 */
-
-		record CustomError(Object errorKey, Map<String, Object> args) implements ValidationError {
-
-			public CustomError(Object errorKey) {
-				this(errorKey, Map.of());
-			}
-
-			public CustomError(Object errorKey, Map<String, Object> args) {
-				this.errorKey = errorKey;
-				this.args = Map.copyOf(args);
-			}
+		non-sealed interface CustomValidationFailure extends ValidationFailure {
 
 		}
 
-		/*
-		 * ===========================================================================
-		 * OBJECT
-		 * ===========================================================================
-		 */
+		// ===========================================================================
+		// OBJECT
 
-		record ObjectIsNull() implements ValidationError {
+		record ObjectIsNull() implements ValidationFailure {
 		}
 
-		/*
-		 * ===========================================================================
-		 * STRING
-		 * ===========================================================================
-		 */
-
-		record StringIsEmpty() implements ValidationError {
+		record ObjectIsNotInstanceOf(Class<?> clazz) implements ValidationFailure {
 		}
 
-		record StringNotParseableToInteger() implements ValidationError {
+		// ===========================================================================
+		// STRING
+
+		record StringIsEmpty() implements ValidationFailure {
 		}
 
-		/*
-		 * ===========================================================================
-		 * NUMBER
-		 * ===========================================================================
-		 */
-
-		record NumberMustBeGreaterThan(Number ref) implements ValidationError {
+		record StringIsTooLong(int currentLength, int maxLength) implements ValidationFailure {
 		}
 
-		record NumberMustBeGreaterOrEqualTo(Number ref) implements ValidationError {
+		record StringIsNotParseableToInteger() implements ValidationFailure {
+		}
+
+		// ===========================================================================
+		// NUMBER
+
+		record NumberIsLowerOrEqualTo<T extends Number>(T ref) implements ValidationFailure {
+		}
+
+		record NumberIsLowerThan<T extends Number>(T ref) implements ValidationFailure {
+		}
+
+		// ===========================================================================
+		// COLLECTION
+
+		record CollectionIsEmpty() implements ValidationFailure {
+
 		}
 
 	}

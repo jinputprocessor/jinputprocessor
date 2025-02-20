@@ -1,15 +1,11 @@
 package io.github.jinputprocessor;
 
-import io.github.jinputprocessor.ProcessResult;
-import io.github.jinputprocessor.InputProcessor;
-import io.github.jinputprocessor.ProcessFailure.ValidationError;
-import io.github.jinputprocessor.core.processor.ChainedProcessor;
-import java.util.function.Consumer;
+import io.github.jinputprocessor.ProcessFailure.ValidationFailure;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-public class InputProcessorTest {
+class InputProcessorTest {
 
 	@Nested
 	class Process {
@@ -21,18 +17,62 @@ public class InputProcessorTest {
 
 			var actualResult = processStr.process("test");
 
-			Assertions.assertThat(actualResult).isSameAs(expectedResult);
+			Assertions.assertThat(actualResult).isEqualTo(expectedResult);
+		}
+
+		@Test
+		void nominal_valid_atProperty() {
+			var expectedResult = ProcessResult.success("OK");
+			InputProcessor<String, String> processStr = value -> expectedResult;
+
+			var actualResult = processStr.process("myVal", "test");
+
+			Assertions.assertThat(actualResult).isEqualTo(expectedResult.atPath(Path.createPropertyPath("myVal")));
+		}
+
+		@Test
+		void nominal_valid_atPath() {
+			Path path = Path.createPropertyPath("myVal").atIndex(0);
+			var expectedResult = ProcessResult.success("OK");
+			InputProcessor<String, String> processStr = value -> expectedResult;
+
+			var actualResult = processStr.process(path, "test");
+
+			Assertions.assertThat(actualResult).isEqualTo(expectedResult.atPath(path));
 		}
 
 		@Test
 		void nominal_error() {
-			var validationError = new ValidationError.CustomError("error.key");
-			ProcessResult<String> expectedResult = ProcessResult.failure(validationError);
+			var validationFailure = new ValidationFailure.ObjectIsNull();
+			ProcessResult<String> expectedResult = ProcessResult.failure(validationFailure);
 			InputProcessor<String, String> processStr = value -> expectedResult;
 
 			var actualResult = processStr.process("test");
 
-			Assertions.assertThat(actualResult).isSameAs(expectedResult);
+			Assertions.assertThat(actualResult).isEqualTo(expectedResult);
+		}
+
+		@Test
+		void nominal_error_atProperty() {
+			var validationFailure = new ValidationFailure.ObjectIsNull();
+			ProcessResult<String> expectedResult = ProcessResult.failure(validationFailure);
+			InputProcessor<String, String> processStr = value -> expectedResult;
+
+			var actualResult = processStr.process("myVal", "test");
+
+			Assertions.assertThat(actualResult).isEqualTo(expectedResult.atPath(Path.createPropertyPath("myVal")));
+		}
+
+		@Test
+		void nominal_error_atPath() {
+			Path path = Path.createPropertyPath("myVal").atIndex(0);
+			var validationFailure = new ValidationFailure.ObjectIsNull();
+			ProcessResult<String> expectedResult = ProcessResult.failure(validationFailure);
+			InputProcessor<String, String> processStr = value -> expectedResult;
+
+			var actualResult = processStr.process(path, "test");
+
+			Assertions.assertThat(actualResult).isEqualTo(expectedResult.atPath(path));
 		}
 
 	}
@@ -45,14 +85,14 @@ public class InputProcessorTest {
 			var defaultFailureMapper = InputProcessor.getDefaultFailureMapper();
 			synchronized (InputProcessor.class) {
 				try {
-					InputProcessor.setDefaultFailureMapper((inputName, failure) -> new NullPointerException("NPE for " + inputName));
+					InputProcessor.setDefaultFailureMapper(failure -> new NullPointerException("NPE!"));
 					var processor = InputProcessor.builder().forString()
-						.validate(value -> new ValidationError.ObjectIsNull())
+						.validate(value -> new ValidationFailure.ObjectIsNull())
 						.build();
 
 					Assertions.assertThatNullPointerException()
-						.isThrownBy(() -> processor.process(null).getValueOrThrow("myVal"))
-						.withMessage("NPE for myVal");
+						.isThrownBy(() -> processor.process(null).getOrThrow())
+						.withMessage("NPE!");
 				} finally {
 					InputProcessor.setDefaultFailureMapper(defaultFailureMapper);
 					Assertions.assertThat(InputProcessor.getDefaultFailureMapper()).isSameAs(defaultFailureMapper);
@@ -66,23 +106,17 @@ public class InputProcessorTest {
 	@Nested
 	class AndThen {
 
-		@SuppressWarnings("unchecked")
 		@Test
 		void andThen_instance() {
 			InputProcessor<String, String> subProcessor1 = value -> ProcessResult.success(value + "-1");
 			InputProcessor<String, String> subProcessor2 = value -> ProcessResult.success(value + "-2");
 
-			var finalProcessor = subProcessor1.andThen(subProcessor2);
-			var actualResult = finalProcessor.process("test");
+			var processor = subProcessor1.andThen(subProcessor2);
 
-			var expectedResult = ProcessResult.success("test-1-2");
-			Consumer<ChainedProcessor<String, String, String>> requirements = chainedProcessor -> {
-				Assertions.assertThat(chainedProcessor)
-					.extracting(ChainedProcessor::getFirstProcessor, ChainedProcessor::getSecondProcessor)
-					.containsExactly(subProcessor1, subProcessor2);
-			};
-			Assertions.assertThat(finalProcessor).isInstanceOfSatisfying((Class<ChainedProcessor<String, String, String>>) (Class<?>) ChainedProcessor.class, requirements);
-			Assertions.assertThat(actualResult).isEqualTo(expectedResult);
+			InputProcessorAssert.assertThat(processor)
+				.isChainedProcessor()
+				.hastFirstProcessor(subProcessor1)
+				.hastSecondProcessor(subProcessor2);
 		}
 
 	}
